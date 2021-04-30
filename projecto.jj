@@ -10,27 +10,49 @@ PARSER_BEGIN(lexico)
 			parser.Start(System.out); }
 	}
 PARSER_END(lexico)
-SKIP : { "\r" | "\r\n" }
-TOKEN : { < SPACE : " " | "\n" > }
+SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
+TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > } 
+TOKEN : { < FuncionMatematica : "sqrt" > }
+TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > }
+TOKEN : { < Llaves : "{" | "}" > }
+TOKEN : { < ReferenciasPunteros : "this" | "&" > }
 TOKEN : { < NUMBER : (["0"-"9"])+ > }
 TOKEN : { < #WORDMIN : (["a"-"z"])+>}
 TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
 TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > }
-	TOKEN : { < BINARY
+
 void Start(PrintStream printStream) throws NumberFormatException:
-{}
+{
+	Token t;
+}
+
 {
 	(
-		(
+		
 			(<IDENTIFIER>)+
 			{printStream.println("Identificador");}
 			|
 			<NUMBER>
 			{printStream.println("Numero");}
-		) 
-		<SPACE>
+			| 
+			t = <OperadorAritmeticoBinario> 
+			{printStream.println("OperadorAritmeticoBinario ("+t.image+")");}
+			|
+			t = <OperadoresLogicos> 
+			{printStream.println("OperadoresLogicos ("+t.image+")");}
+			|
+			t = <FuncionMatematica> 
+			{printStream.println("FuncionMatematica ("+t.image+")");}
+			|
+			t = <Llaves> 
+			{printStream.println("Llaves ("+t.image+")");}
+			|
+			t = <ReferenciasPunteros> 
+			{printStream.println("ReferenciasPunteros ("+t.image+")");}
+	
+		 
 	)*	
 	<EOF>
 }
