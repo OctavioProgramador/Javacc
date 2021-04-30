@@ -1,0 +1,36 @@
+options {
+	STATIC = false;
+}
+PARSER_BEGIN(lexico)
+	import java.io.PrintStream;
+	class lexico {
+		public static void main (String [] args)
+		throws ParseException, TokenMgrError{
+			lexico parser = new lexico( System.in);
+			parser.Start(System.out); }
+	}
+PARSER_END(lexico)
+SKIP : { "\r" | "\r\n" }
+TOKEN : { < SPACE : " " | "\n" > }
+TOKEN : { < NUMBER : (["0"-"9"])+ > }
+TOKEN : { < #WORDMIN : (["a"-"z"])+>}
+TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
+TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
+TOKEN : { < #SPECIAL : "_" | "@" | "." > }
+TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > }
+void Start(PrintStream printStream) throws NumberFormatException:
+{}
+{
+	(
+		(
+			(<IDENTIFIER>)+
+			{printStream.println("Identificador");}
+			|
+			<NUMBER>
+			{printStream.println("Numero");}
+		) 
+		<SPACE>
+	)*	
+	<EOF>
+}
+
