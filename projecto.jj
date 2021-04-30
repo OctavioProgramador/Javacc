@@ -18,6 +18,7 @@ TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
 TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > }
+	TOKEN : { < BINARY
 void Start(PrintStream printStream) throws NumberFormatException:
 {}
 {
