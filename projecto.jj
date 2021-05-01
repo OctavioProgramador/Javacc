@@ -11,6 +11,56 @@ PARSER_BEGIN(lexico)
 	}
 PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
+TOKEN:
+{	<EQ: "==">  }
+TOKEN: {<Asignacion: "=">}
+TOKEN : {
+	<DF: "!="> 
+}
+TOKEN : {
+	<MYR: ">"> 
+}
+TOKEN : {
+	<MNR: "<">  
+}
+TOKEN : {
+	<MYI: "=>"> 
+}
+TOKEN : {
+	<MEI: "<=">
+
+}
+TOKEN:
+{
+	<PI: "("> 
+}
+TOKEN : {
+	<PD: ")">
+}
+TOKEN:
+{
+	<CI: "[" >
+}
+TOKEN : {
+	<CD: "]" >
+}
+TOKEN:
+{
+	<COM1: "/*">
+}
+TOKEN : {
+	<COM2: "*/">
+}
+TOKEN : {
+	<COM3: "//">
+}
+TOKEN:
+{
+	<INCR :"++">
+}
+TOKEN : {
+	<DECR: "--">
+}
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > } 
 TOKEN : { < FuncionMatematica : "sqrt" > }
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > }
@@ -23,6 +73,7 @@ TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > }
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > }
 
+
 void Start(PrintStream printStream) throws NumberFormatException:
 {
 	Token t;
@@ -31,12 +82,15 @@ void Start(PrintStream printStream) throws NumberFormatException:
 {
 	(
 		
-			(<IDENTIFIER>)+
-			{printStream.println("Identificador");}
+			t = <IDENTIFIER>
+			{printStream.println("Identificador ("+t.beginLine+", "+t.beginColumn+")");}
 			|
-			<NUMBER>
-			{printStream.println("Numero");}
+			t = <NUMBER>
+			{printStream.println("Numero ("+t.beginLine+", "+t.beginColumn+")");}
 			| 
+			t = <Asignacion>
+			{printStream.println("Asignacion");}
+			|		
 			t = <OperadorAritmeticoBinario> 
 			{printStream.println("OperadorAritmeticoBinario ("+t.image+")");}
 			|
@@ -51,8 +105,52 @@ void Start(PrintStream printStream) throws NumberFormatException:
 			|
 			t = <ReferenciasPunteros> 
 			{printStream.println("ReferenciasPunteros ("+t.image+")");}
-	
-		 
+			|	
+			t = <EQ> 
+			{printStream.println("EQ");}
+			|
+			t = <DF> 
+			{printStream.println("DF"); }
+			|
+			t = <MYR> 
+			{printStream.println("MYR"); }
+			|
+			t = <MNR> 
+			{printStream.println("MNR"); }
+			|
+			t = <MYI> 
+			{printStream.println("MYI"); }
+			|
+			t = <MEI> 
+			{printStream.println("MEI"); }
+			|
+			t = <PI> 
+			{printStream.println("PI"); }
+			|
+			t = <PD> 
+			{printStream.println("PD"); }
+			|
+			t = <CI> 
+			{printStream.println("CI"); }
+			|
+			t = <CD> 
+			{printStream.println("CD"); }
+			|
+			t = <COM1> 
+			{printStream.println("COM1"); }
+			|
+			t = <COM2> 
+			{printStream.println("COM2"); }
+			|
+			t = <COM3> 
+			{printStream.println("COM3"); }
+			|
+			t = <INCR> 
+			{printStream.println("INCR"); }
+			|
+			t = <DECR> 
+			{printStream.println("DECR"); }
+			
 	)*	
 	<EOF>
 }
