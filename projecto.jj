@@ -106,49 +106,49 @@ void Start(PrintStream printStream) throws NumberFormatException:
 			t = <ReferenciasPunteros> 
 			{printStream.println("ReferenciasPunteros ("+t.image+")");}
 			|	
-			t = <EQ> 
+			 <EQ> 
 			{printStream.println("EQ");}
 			|
-			t = <DF> 
+			<DF> 
 			{printStream.println("DF"); }
 			|
-			t = <MYR> 
+			 <MYR> 
 			{printStream.println("MYR"); }
 			|
-			t = <MNR> 
+			<MNR> 
 			{printStream.println("MNR"); }
 			|
-			t = <MYI> 
+			<MYI> 
 			{printStream.println("MYI"); }
 			|
-			t = <MEI> 
+			<MEI> 
 			{printStream.println("MEI"); }
 			|
-			t = <PI> 
+			<PI> 
 			{printStream.println("PI"); }
 			|
-			t = <PD> 
+			<PD> 
 			{printStream.println("PD"); }
 			|
-			t = <CI> 
+			<CI> 
 			{printStream.println("CI"); }
 			|
-			t = <CD> 
+			<CD> 
 			{printStream.println("CD"); }
 			|
-			t = <COM1> 
+			<COM1> 
 			{printStream.println("COM1"); }
 			|
-			t = <COM2> 
+			<COM2> 
 			{printStream.println("COM2"); }
 			|
-			t = <COM3> 
+			<COM3> 
 			{printStream.println("COM3"); }
 			|
-			t = <INCR> 
+			<INCR> 
 			{printStream.println("INCR"); }
 			|
-			t = <DECR> 
+			<DECR> 
 			{printStream.println("DECR"); }
 			
 	)*	
