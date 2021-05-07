@@ -11,113 +11,28 @@ PARSER_BEGIN(lexico)
 	}
 PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
-TOKEN: { <EQ: "==">  }
-TOKEN: {<Asignacion: "=">}
-TOKEN : { <DF: "!="> }
-TOKEN : { <MYR: ">"> }
-TOKEN : { <MNR: "<"> }
-TOKEN : {<MYI: "=>"> }
-TOKEN : { <MEI: "<="> }
-TOKEN: { <PI: "("> }
-TOKEN : {<PD: ")">}
-TOKEN: { <CI: "[" > }
-TOKEN : { <CD: "]" > }
-TOKEN:{ <COM1: "/*"> }
-TOKEN : { <COM2: "*/"> }
-TOKEN : { <COM3: "//"> }
-TOKEN: { <INCR :"++"> }
-TOKEN : { <DECR: "--"> }
-TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > } 
-TOKEN : { < FuncionMatematica : "sqrt" > }
-TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > }
-TOKEN : { < Llaves : "{" | "}" > }
-TOKEN : { < ReferenciasPunteros : "this" | "&" > }
-TOKEN : { < NUMBER : (["0"-"9"])+ > }
+TOKEN: {<Asignacion: "="> {printStream.println("Asignacion");}}
+TOKEN: { <OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" > {printStream.println("OperadorRelacional ("+t.image+")");}}
+TOKEN: { <Parentesis: "(" | ")">{printStream.println("Parentesis ("+t.image+")");}}
+TOKEN: { <Corchete: "["  | "]">{printStream.println("Corchete ("+t.image+")");}}
+TOKEN: { <Comentario: "/*" | "*/" |  "//"> {printStream.println("Comentario ("+t.image+")");}}
+TOKEN: { OperadorAritmetico: "++" | "--" > {printStream.println("OperadorAritmetico ("+t.image+")");}}
+TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > {printStream.println("OperadorAritmeticoBinario ("+t.image+")");}}
+TOKEN : { < FuncionMatematica : "sqrt" > {printStream.println("FuncionMatematica ("+t.image+")");}}
+TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > {printStream.println("OperadoresLogicos ("+t.image+")");}}
+TOKEN : { < Llaves : "{" | "}" > {printStream.println("Llaves ("+t.image+")");}}
+TOKEN : { < ReferenciasPunteros : "this" | "&" > {printStream.println("ReferenciasPunteros ("+t.image+")");}}
+TOKEN : { < NUMBER : (["0"-"9"])+ > {printStream.println("Numero ("+t.beginLine+", "+t.beginColumn+")");}}
 TOKEN : { < #WORDMIN : (["a"-"z"])+>}
 TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
 TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
-TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > }
-
+TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > {printStream.println("Identificador ("+t.beginLine+", "+t.beginColumn+")");}}
 
 void Start(PrintStream printStream) throws NumberFormatException:
+{}
 {
-	Token t;
-}
-
-{
-	(
-		
-			t = <IDENTIFIER>
-			{printStream.println("Identificador ("+t.beginLine+", "+t.beginColumn+")");}
-			|
-			t = <NUMBER>
-			{printStream.println("Numero ("+t.beginLine+", "+t.beginColumn+")");}
-			| 
-			t = <Asignacion>
-			{printStream.println("Asignacion");}
-			|		
-			t = <OperadorAritmeticoBinario> 
-			{printStream.println("OperadorAritmeticoBinario ("+t.image+")");}
-			|
-			t = <OperadoresLogicos> 
-			{printStream.println("OperadoresLogicos ("+t.image+")");}
-			|
-			t = <FuncionMatematica> 
-			{printStream.println("FuncionMatematica ("+t.image+")");}
-			|
-			t = <Llaves> 
-			{printStream.println("Llaves ("+t.image+")");}
-			|
-			t = <ReferenciasPunteros> 
-			{printStream.println("ReferenciasPunteros ("+t.image+")");}
-			|	
-			 <EQ> 
-			{printStream.println("EQ");}
-			|
-			<DF> 
-			{printStream.println("DF"); }
-			|
-			 <MYR> 
-			{printStream.println("MYR"); }
-			|
-			<MNR> 
-			{printStream.println("MNR"); }
-			|
-			<MYI> 
-			{printStream.println("MYI"); }
-			|
-			<MEI> 
-			{printStream.println("MEI"); }
-			|
-			<PI> 
-			{printStream.println("PI"); }
-			|
-			<PD> 
-			{printStream.println("PD"); }
-			|
-			<CI> 
-			{printStream.println("CI"); }
-			|
-			<CD> 
-			{printStream.println("CD"); }
-			|
-			<COM1> 
-			{printStream.println("COM1"); }
-			|
-			<COM2> 
-			{printStream.println("COM2"); }
-			|
-			<COM3> 
-			{printStream.println("COM3"); }
-			|
-			<INCR> 
-			{printStream.println("INCR"); }
-			|
-			<DECR> 
-			{printStream.println("DECR"); }
-			
-	)*	
+	(<IDENTIFIER>|<NUMBER>|<Asignacion>|<OperadorAritmeticoBinario>|<OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>|<Corchete>|<Comentario>|<OperadorAritmetico>)*	
 	<EOF>
 }
 
