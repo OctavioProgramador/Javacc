@@ -11,28 +11,59 @@ PARSER_BEGIN(lexico)
 	}
 PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
-TOKEN: {<Asignacion: "="> {printStream.println("Asignacion");}}
-TOKEN: { <OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" > {printStream.println("OperadorRelacional ("+t.image+")");}}
-TOKEN: { <Parentesis: "(" | ")">{printStream.println("Parentesis ("+t.image+")");}}
-TOKEN: { <Corchete: "["  | "]">{printStream.println("Corchete ("+t.image+")");}}
-TOKEN: { <Comentario: "/*" | "*/" |  "//"> {printStream.println("Comentario ("+t.image+")");}}
-TOKEN: { OperadorAritmetico: "++" | "--" > {printStream.println("OperadorAritmetico ("+t.image+")");}}
-TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > {printStream.println("OperadorAritmeticoBinario ("+t.image+")");}}
-TOKEN : { < FuncionMatematica : "sqrt" > {printStream.println("FuncionMatematica ("+t.image+")");}}
-TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > {printStream.println("OperadoresLogicos ("+t.image+")");}}
-TOKEN : { < Llaves : "{" | "}" > {printStream.println("Llaves ("+t.image+")");}}
-TOKEN : { < ReferenciasPunteros : "this" | "&" > {printStream.println("ReferenciasPunteros ("+t.image+")");}}
-TOKEN : { < NUMBER : (["0"-"9"])+ > {printStream.println("Numero ("+t.beginLine+", "+t.beginColumn+")");}}
+TOKEN : {<Asignacion: "="> {System.out.println("Asignacion");}}
+TOKEN : { <OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" > 
+	{System.out.println("OperadorRelacional ("+image+")");}}
+TOKEN : { <Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}}
+TOKEN : { <Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}}
+TOKEN : { <Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}}
+TOKEN : { <OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}}
+TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > 
+	{System.out.println("OperadorAritmeticoBinario ("+image+")");}}
+TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ("+image+")");}}
+TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > 
+	{System.out.println("OperadoresLogicos ("+image+")");}}
+TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}}
+TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ("+image+")");}}
+TOKEN : { < NUMBER : (["0"-"9"])+ >}  
 TOKEN : { < #WORDMIN : (["a"-"z"])+>}
 TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
 TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
-TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* > {printStream.println("Identificador ("+t.beginLine+", "+t.beginColumn+")");}}
-
+TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
+TOKEN : { < Coma : "," > {System.out.println("Coma");}} 
+TOKEN : { < Rango : ":" > {System.out.println("Rango");}} 
+TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" > 
+	{System.out.println("Directiva de preprocesador ("+image+")");}} 
+TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}} 
+TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"where"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}} 
+TOKEN: {<ReferenciaApuntador: "&" | "this">}
+TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" >}
+TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}}
+TOKEN: {<FinDeLinea: ";">}
+TOKEN: {<Comillas: "\""| "\'">}
 void Start(PrintStream printStream) throws NumberFormatException:
-{}
+{Token t;}
 {
-	(<IDENTIFIER>|<NUMBER>|<Asignacion>|<OperadorAritmeticoBinario>|<OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>|<Corchete>|<Comentario>|<OperadorAritmetico>)*	
+	(t = <IDENTIFIER> {printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
+	|t = <NUMBER>{printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
+	|<Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
+	|<OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
+	|<Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
+	|<SentenciaIF>|<FuncionesPredefinidas>|t = <ReferenciaApuntador>
+   {printStream.println("ReferenciaApuntador");}
+   |
+   t = <TipoDeDato>
+   {printStream.println("Tipo de Dato ("+t.image+")");}
+   |
+   t = <AccesoAElementos> 
+   {printStream.println("ReferenciasPunteros");}
+   |
+   t = <FinDeLinea>
+   {printStream.println("FinDeLinea");}
+   | 
+   t = <Comillas>
+   {printStream.println("Comillas");})*	
 	<EOF>
 }
 
