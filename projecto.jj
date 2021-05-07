@@ -11,56 +11,22 @@ PARSER_BEGIN(lexico)
 	}
 PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
-TOKEN:
-{	<EQ: "==">  }
+TOKEN: { <EQ: "==">  }
 TOKEN: {<Asignacion: "=">}
-TOKEN : {
-	<DF: "!="> 
-}
-TOKEN : {
-	<MYR: ">"> 
-}
-TOKEN : {
-	<MNR: "<">  
-}
-TOKEN : {
-	<MYI: "=>"> 
-}
-TOKEN : {
-	<MEI: "<=">
-
-}
-TOKEN:
-{
-	<PI: "("> 
-}
-TOKEN : {
-	<PD: ")">
-}
-TOKEN:
-{
-	<CI: "[" >
-}
-TOKEN : {
-	<CD: "]" >
-}
-TOKEN:
-{
-	<COM1: "/*">
-}
-TOKEN : {
-	<COM2: "*/">
-}
-TOKEN : {
-	<COM3: "//">
-}
-TOKEN:
-{
-	<INCR :"++">
-}
-TOKEN : {
-	<DECR: "--">
-}
+TOKEN : { <DF: "!="> }
+TOKEN : { <MYR: ">"> }
+TOKEN : { <MNR: "<"> }
+TOKEN : {<MYI: "=>"> }
+TOKEN : { <MEI: "<="> }
+TOKEN: { <PI: "("> }
+TOKEN : {<PD: ")">}
+TOKEN: { <CI: "[" > }
+TOKEN : { <CD: "]" > }
+TOKEN:{ <COM1: "/*"> }
+TOKEN : { <COM2: "*/"> }
+TOKEN : { <COM3: "//"> }
+TOKEN: { <INCR :"++"> }
+TOKEN : { <DECR: "--"> }
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > } 
 TOKEN : { < FuncionMatematica : "sqrt" > }
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > }
