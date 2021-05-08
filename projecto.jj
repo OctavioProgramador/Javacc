@@ -1,6 +1,7 @@
 options {
 	STATIC = false;
 }
+
 PARSER_BEGIN(lexico)
 	import java.io.PrintStream;
 	class lexico {
@@ -10,14 +11,15 @@ PARSER_BEGIN(lexico)
 			parser.Start(System.out); }
 	}
 PARSER_END(lexico)
+
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
-TOKEN : {<Asignacion: "="> {System.out.println("Asignacion");}}
-TOKEN : { <OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" > 
+TOKEN : { < Asignacion: "="> {System.out.println("Asignacion");}}
+TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" > 
 	{System.out.println("OperadorRelacional ("+image+")");}}
-TOKEN : { <Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}}
-TOKEN : { <Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}}
-TOKEN : { <Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}}
-TOKEN : { <OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}}
+TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}}
+TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}}
+TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}}
+TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}}
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" > 
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}}
 TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ("+image+")");}}
@@ -42,28 +44,20 @@ TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}}
 TOKEN: {<FinDeLinea: ";">}
 TOKEN: {<Comillas: "\""| "\'">}
+
 void Start(PrintStream printStream) throws NumberFormatException:
 {Token t;}
 {
-	(t = <IDENTIFIER> {printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
+	(t = <IDENTIFIER> {printStream.println("Identificador ("+t.beginLine+","+t.beginColumn+")");}
 	|t = <NUMBER>{printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
 	|<Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
 	|<OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
 	|<Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
 	|<SentenciaIF>|<FuncionesPredefinidas>|t = <ReferenciaApuntador>
-   {printStream.println("ReferenciaApuntador");}
-   |
-   t = <TipoDeDato>
-   {printStream.println("Tipo de Dato ("+t.image+")");}
-   |
-   t = <AccesoAElementos> 
-   {printStream.println("ReferenciasPunteros");}
-   |
-   t = <FinDeLinea>
-   {printStream.println("FinDeLinea");}
-   | 
-   t = <Comillas>
-   {printStream.println("Comillas");})*	
+   	{printStream.println("ReferenciaApuntador");} | t = <TipoDeDato>
+   	{printStream.println("Tipo de Dato ("+t.image+")");} | t = <AccesoAElementos> 
+   	{printStream.println("ReferenciasPunteros");} | t = <FinDeLinea>
+	{printStream.println("FinDeLinea");} | t = <Comillas> {printStream.println("Comillas");})*	
 	<EOF>
 }
 
