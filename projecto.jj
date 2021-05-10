@@ -39,25 +39,22 @@ TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" >
 	{System.out.println("Directiva de preprocesador ("+image+")");}} 
 TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}} 
 TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"where"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}} 
-TOKEN: {<ReferenciaApuntador: "&" | "this">}
-TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" >}
+TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}}
+TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {printStream.println("Tipo de Dato ("+t.image+")");}}
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}}
-TOKEN: {<FinDeLinea: ";">}
-TOKEN: {<Comillas: "\""| "\'">}
+TOKEN: {<FinDeLinea: ";">{printStream.println("FinDeLinea");} }
+TOKEN: {<Comillas: "\""| "\'">{printStream.println("Comillas");}}
 
 void Start(PrintStream printStream) throws NumberFormatException:
 {Token t;}
 {
 	(t = <IDENTIFIER> {printStream.println("Identificador ("+t.beginLine+","+t.beginColumn+")");}
 	|t = <NUMBER>{printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
-	|<Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
-	|<OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
-	|<Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
-	|<SentenciaIF>|<FuncionesPredefinidas>|t = <ReferenciaApuntador>
-   	{printStream.println("ReferenciaApuntador");} | t = <TipoDeDato>
-   	{printStream.println("Tipo de Dato ("+t.image+")");} | t = <AccesoAElementos> 
-   	{printStream.println("ReferenciasPunteros");} | t = <FinDeLinea>
-	{printStream.println("FinDeLinea");} | t = <Comillas> {printStream.println("Comillas");})*	
+	| <Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
+	| <OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
+	| <Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
+	| <SentenciaIF>|<FuncionesPredefinidas>|<ReferenciaApuntador>|<TipoDeDato>
+   	| <AccesoAElementos> | <FinDeLinea> | <Comillas> )*	
 	<EOF>
 }
 
