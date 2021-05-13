@@ -82,22 +82,18 @@ void Start(PrintStream printStream) throws NumberFormatException:
 {
 	(t = <IDENTIFIER> {
 		String palabra = t.image;
-		int j = 0;
-		int k = 0;
-		for (int i = 0; i < tabla.size(); i++)
+		int i = 0;
+		for (; i < tabla.size(); i++)
 		{
 			if(palabra.equals(tabla.get(i)))
 			{
-				j = i;
 				break;
 			}
-			k = i;
 		}
-		if(j==0){
+		if(tabla.size() == i){
 			tabla.add(palabra);
-			k++;
 		}
-		System.out.println("Identificador ("+Integer.toString(k)+")");
+		System.out.println("Identificador ("+Integer.toString(i)+")");
 	}
 	|t = <NUMBER>{System.out.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
 	| <Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
