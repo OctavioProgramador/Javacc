@@ -4,6 +4,7 @@ options {
 
 PARSER_BEGIN(lexico)
 	import java.io.PrintStream;
+	import java.util.ArrayList;
 	class lexico {
 		public static void main (String [] args)
 		throws ParseException, TokenMgrError{
@@ -39,10 +40,10 @@ TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" >
 TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}} //15
 TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}} //16 Dividir mejor esta parte
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}} //16
-TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {printStream.println("Tipo de Dato ("+t.image+")");}} //17
+TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {System.out.println("Tipo de Dato ("+image+")");}} //17
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}} //18
-TOKEN: {<FinDeLinea: ";">{printStream.println("FinDeLinea");} } //19
-TOKEN: {<Comillas: "\""| "\'">{printStream.println("Comillas");}} //20
+TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
+TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
 TOKEN : {<Return: "return">{System.out.println("return");}} //22
 TOKEN : {<OfExpresionCase: "of">{System.out.println("OfExpresionCase");}} //23
 TOKEN : {<PartesExpresionLet: "let" | "in" >{System.out.println("ParteExpresionLet ("+image+")");}} //24
@@ -53,7 +54,7 @@ TOKEN : {<ExpresionDeConversion: "as" >{System.out.println("as");}} //30
 TOKEN : {<InterrupcionDeProcesos: "continue" | "break" >{System.out.println("InterrupcionDeProcesos ("+image+")");}} //31
 TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default"|"goto" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
 TOKEN : {<ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
-TOKEN : {<DeclaracionDeClase: "clase" >{Sytem.out.println("DeclaracionDeClase");}} //35
+TOKEN : {<DeclaracionDeClase: "clase" >{System.out.println("DeclaracionDeClase");}} //35
 TOKEN : {<ModificadorDeTipo: "const"|"signed"|"unsigned" >{System.out.println("ModificadorDeTipo("+image+")");}} //36
 TOKEN : {<DeclaracionEnumeracion: "enum">{System.out.println("DeclaracionEnumeracion");}} //37
 TOKEN : {<DeclaracionDeEvento: "event">{System.out.println("DeclaracionDeEvento");}} //38
@@ -80,6 +81,7 @@ void Start(PrintStream printStream) throws NumberFormatException:
 }
 {
 	(t = <IDENTIFIER> {
+		String palabra = t.image;
 		int j = 0;
 		int k = 0;
 		for (int i = 0; i < tabla.size(); i++)
@@ -91,13 +93,13 @@ void Start(PrintStream printStream) throws NumberFormatException:
 			}
 			k = i;
 		}
-		if(k>j){
+		if(j==0){
 			tabla.add(palabra);
 			k++;
 		}
-		printStream.println("Identificador ("+String.toString(ImprimirPosicionEnTabla(t.image))+")");
+		System.out.println("Identificador ("+Integer.toString(k)+")");
 	}
-	|t = <NUMBER>{printStream.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
+	|t = <NUMBER>{System.out.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
 	| <Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
 	| <OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
 	| <Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
