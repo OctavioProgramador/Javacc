@@ -40,7 +40,7 @@ TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" >
 TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}}
 TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"where"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}}
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}}
-TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {printStream.println("Tipo de Dato ("+t.image+")");}}
+TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {printStream.println("Tipo de Dato ("+image+")");}}
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}}
 TOKEN: {<FinDeLinea: ";">{printStream.println("FinDeLinea");} }
 TOKEN: {<Comillas: "\""| "\'">{printStream.println("Comillas");}}
@@ -52,7 +52,9 @@ TOKEN:{<Package:"package">{System.out.println("Package");}}
 TOKEN:{<Global:"global">{System.out.println("Global");}}
 TOKEN:{<Join:"join">{System.out.println("Join");}}
 TOKEN:{<Lock:"lock">{System.out.println("Lock");}}
-TOKEN:{<ImportarExportarFunciones:"dllexport" | "dllimport" | "extern">{System.out.println("Exportar e Importar Funciones,clases,objetos");}}
+TOKEN:{<Dllexport:"dllexport" | | >{System.out.println("Dllexport");}}
+TOKEN:{<Dllimport: "dllimport" >{System.out.println("Dllimport");}}
+TOKEN:{<Extern: "extern">{System.out.println("extern");}}
 TOKEN:{<Noreturn:"noreturn">{System.out.println("noreturn");}}
 TOKEN:{<Def:"def">{System.out.println("Def");}}
 TOKEN:{<Del: "del">{System.out.println("Del");}}
@@ -60,10 +62,10 @@ TOKEN:{<None: "none">{System.out.println("None");}}
 TOKEN:{<Elif: "elif">{System.out.println("Elif");}}
 TOKEN:{<Nolocal: "nolocal">{System.out.println("Nolocal");}}
 TOKEN:{<Equals: "equals">{System.out.println("Equals");}}
-TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("Operador De COnversion->"+image);}}
+TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("Operador De Conversion->"+image);}}
 TOKEN:{<Delete: "delete">{System.out.println("Delete");}}
 TOKEN:{<Object: "object">{System.out.println("Object");}}
-TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("Especificador De Almacenamiento->"image);}}
+TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("Especificador De Almacenamiento->"+image);}}
 TOKEN:{<Super: "super">{System.out.println("Super");}}
 TOKEN:{<Let: "let">{System.out.println("Let");}}
 TOKEN:{<Import: "import">{System.out.println("Import");}}
@@ -92,6 +94,6 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <Package> | <Global> | <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn>
 	| <Def> | <Del> | <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Let> | <Import> | <Strictfp> | <Var> | <DescriptoresDeAcceso>
-	| <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print> | <Implements> | <Fixed> | <Instanceof>)*
+	| <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print> | <Implements> | <Fixed> | <Instanceof> | <Dllexport> | <Dllimport> | <Extern>)*
 	<EOF>
 }
