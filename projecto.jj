@@ -29,9 +29,7 @@ TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" >
 TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}} //10
 TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ("+image+")");}} //11
 TOKEN : { < NUMBER : (["0"-"9"])+ >}  
-TOKEN : { < #WORDMIN : (["a"-"z"])+>} //Quitar
-TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>} //Quitar
-TOKEN : { < #WORD : (<WORDMIN>|<WORDMAYUS>)+ > } 
+TOKEN : { < #WORD : ((["a"-"z"]|["A"-"Z"]))+ > } 
 TOKEN : { < #SPECIAL : "_" | "@" | "." > }
 TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}} //13
