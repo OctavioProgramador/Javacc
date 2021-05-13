@@ -15,18 +15,18 @@ PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
 TOKEN : { < Asignacion: "="> {System.out.println("Asignacion");}}
 TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >
-	{System.out.println("OperadorRelacional ("+image+")");}}
-TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}}
-TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}}
-TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}}
-TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}}
+	{System.out.println("OperadorRelacional ( "+image+")" );}}
+TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ( "+image+" )");}}
+TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ( "+image+" )");}}
+TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ( "+image+" )");}}
+TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ( "+image+")" );}}
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" >
-	{System.out.println("OperadorAritmeticoBinario ("+image+")");}}
-TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ("+image+")");}}
+	{System.out.println("OperadorAritmeticoBinario ( "+image+" )");}}
+TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ( "+image+" )");}}
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" >
-	{System.out.println("OperadoresLogicos ("+image+")");}}
-TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}}
-TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ("+image+")");}}
+	{System.out.println("OperadoresLogicos ( "+image+" )");}}
+TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ( "+image+" )");}}
+TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ( "+image+") ");}}
 TOKEN : { < NUMBER : (["0"-"9"])+ >}
 TOKEN : { < #WORDMIN : (["a"-"z"])+>}
 TOKEN : { < #WORDMAYUS : (["A"-"Z"])+>}
@@ -36,12 +36,12 @@ TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 TOKEN : { < Coma : "," > {System.out.println("Coma");}}
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}}
 TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" >
-	{System.out.println("Directiva de preprocesador ("+image+")");}}
-TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}}
-TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"where"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}}
+	{System.out.println("DirectivaDePreprocesador ( "+image+" )");}}
+TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia ( "+image+" )");}}
+TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"where"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("FuncionPredefinida ( "+image+" )");}}
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}}
 TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {printStream.println("Tipo de Dato ("+image+")");}}
-TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}}
+TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("AccesoAElementos ( "+imag +" )");}}
 TOKEN: {<FinDeLinea: ";">{printStream.println("FinDeLinea");} }
 TOKEN: {<Comillas: "\""| "\'">{printStream.println("Comillas");}}
 
@@ -62,16 +62,16 @@ TOKEN:{<None: "none">{System.out.println("None");}}
 TOKEN:{<Elif: "elif">{System.out.println("Elif");}}
 TOKEN:{<Nolocal: "nolocal">{System.out.println("Nolocal");}}
 TOKEN:{<Equals: "equals">{System.out.println("Equals");}}
-TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("Operador De Conversion->"+image);}}
+TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("OperadorDeConversion ( "+image+") ");}}
 TOKEN:{<Delete: "delete">{System.out.println("Delete");}}
 TOKEN:{<Object: "object">{System.out.println("Object");}}
-TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("Especificador De Almacenamiento->"+image);}}
+TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("EspecificadorDeAlmacenamiento ("+image+") ");}}
 TOKEN:{<Super: "super">{System.out.println("Super");}}
 TOKEN:{<Let: "let">{System.out.println("Let");}}
 TOKEN:{<Import: "import">{System.out.println("Import");}}
 TOKEN:{<Strictfp: "strictfp">{System.out.println("Strictfp");}}
 TOKEN:{<Var: "var">{System.out.println("Var");}}
-TOKEN:{<DescriptoresDeAcceso: "get" | "set">{System.out.println("Descriptores de Acceso->"+image);}}
+TOKEN:{<DescriptoresDeAcceso: "get" | "set">{System.out.println("DescriptoresDeAcceso ( "+image+") ");}}
 TOKEN:{<Pass: "pass">{System.out.println("Pass");}}
 TOKEN:{<Typeid: "typeid">{System.out.println("Typeid");}}
 TOKEN:{<Typedef:"typedef">{System.out.println("Typedef");}}
