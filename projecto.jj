@@ -53,7 +53,7 @@ TOKEN : {<DeclaracionDeTipos: "newtype" > {System.out.println("DeclaracionDeTipo
 TOKEN : {<ExpresionWhere : "where" > {System.out.println("ExpresionWhere");}} //27
 TOKEN : {<ExpresionDeConversion: "as" >{System.out.println("as");}} //30
 TOKEN : {<InterrupcionDeProcesos: "continue" | "break" >{System.out.println("InterrupcionDeProcesos ("+image+")");}} //31
-TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default"|"goto" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
+TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
 TOKEN : {<ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
 TOKEN : {<DeclaracionDeClase: "clase" >{System.out.println("DeclaracionDeClase");}} //35
 TOKEN : {<ModificadorDeTipo: "const"|"signed"|"unsigned" >{System.out.println("ModificadorDeTipo("+image+")");}} //36
