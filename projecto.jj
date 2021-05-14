@@ -77,7 +77,9 @@ TOKEN:{<Package:"package">{System.out.println("Package");}}
 TOKEN:{<Global:"global">{System.out.println("Global");}}
 TOKEN:{<Join:"join">{System.out.println("Join");}}
 TOKEN:{<Lock:"lock">{System.out.println("Lock");}}
-TOKEN:{<ImportarExportarFunciones:"dllexport" | "dllimport" | "extern">{System.out.println("Exportar e Importar Funciones,clases,objetos");}}
+TOKEN:{<Dllexport:"dllexport" >{System.out.println("Dllexport");}}
+TOKEN:{<Dllimport: "dllimport" >{System.out.println("Dllimport");}}
+TOKEN:{<Extern: "extern">{System.out.println("extern");}}
 TOKEN:{<Noreturn:"noreturn">{System.out.println("noreturn");}}
 TOKEN:{<Def:"def">{System.out.println("Def");}}
 TOKEN:{<Del: "del">{System.out.println("Del");}}
@@ -107,6 +109,7 @@ TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
 TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExceptiones ("+image+")");}} 
 /*Identificador*/
+TOKEN: {<Main: "main">{System.out.println("Main");}}
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 
 void Start(PrintStream printStream) throws NumberFormatException:
@@ -146,10 +149,10 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <ExpresionDeConversion> | <ExpresionWhere> | <DeclaracionDeTipos> 
 	| <ClasesPredefinidas> | <PartesExpresionLet> | <OfExpresionCase> 
 	| <Return>| <Comillas> | <Estructura> | <Extends> | <Package> | <Global> 
-	| <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn> | <Def> | <Del> 
+	| <Join>| <Lock>| <Noreturn> | <Def> | <Del> 
 	| <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
-	| <Implements> | <Fixed> | <Instanceof> )*
+	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
 	<EOF>
 }
