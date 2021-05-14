@@ -27,7 +27,7 @@ TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+
 TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}} //6
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" >  
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}} //7
-TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ("+image+")");}} //8
+TOKEN : { < FuncionMatematica : "sqrt" | "abs"> {System.out.println("FuncionMatematica ("+image+")");}} //8
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > 
 	{System.out.println("OperadoresLogicos ("+image+")");}} //9
 TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}} //10
