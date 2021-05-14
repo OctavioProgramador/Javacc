@@ -34,12 +34,12 @@ TOKEN : { < #SPECIAL : "_" | "@" | "." > }
 TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}} //13
 TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" > 
-	{System.out.println("Directiva de preprocesador ("+image+")");}} //14
-TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("Sentencia if("+image+")");}} //15
+	{System.out.println("DirectivaDePreprocesador ("+image+")");}} //14
+TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("SentenciaIf("+image+")");}} //15
 TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}} //16 Dividir mejor esta parte
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}} //16
 TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {System.out.println("Tipo de Dato ("+image+")");}} //17
-TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("Acceso a Elementos -> " + image);}} //18
+TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("AccesoAElementos -> " + image);}} //18
 TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
 TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
 TOKEN : {<Return: "return">{System.out.println("return");}} //22
@@ -83,15 +83,14 @@ TOKEN:{<None: "none">{System.out.println("None");}}
 TOKEN:{<Elif: "elif">{System.out.println("Elif");}}
 TOKEN:{<Nolocal: "nolocal">{System.out.println("Nolocal");}}
 TOKEN:{<Equals: "equals">{System.out.println("Equals");}}
-TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("Operador De COnversion->"+image);}}
+TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("OperadorDeConversion ( "+image+") ");}}
 TOKEN:{<Delete: "delete">{System.out.println("Delete");}}
 TOKEN:{<Object: "object">{System.out.println("Object");}}
-TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("Especificador De Almacenamiento "+image);}}
 TOKEN:{<Super: "super">{System.out.println("Super");}}
 TOKEN:{<Import: "import">{System.out.println("Import");}}
 TOKEN:{<Strictfp: "strictfp">{System.out.println("Strictfp");}}
 TOKEN:{<Var: "var">{System.out.println("Var");}}
-TOKEN:{<DescriptoresDeAcceso: "get" | "set">{System.out.println("Descriptores de Acceso->"+image);}}
+TOKEN:{<DescriptoresDeAcceso: "get" | "set">{System.out.println("DescriptoresDeAcceso ( "+image+") ");}}
 TOKEN:{<Pass: "pass">{System.out.println("Pass");}}
 TOKEN:{<Typeid: "typeid">{System.out.println("Typeid");}}
 TOKEN:{<Typedef:"typedef">{System.out.println("Typedef");}}
@@ -100,6 +99,7 @@ TOKEN:{<Print:"print">{System.out.println("Print");}}
 TOKEN:{<Implements: "implements">{System.out.println("Implements");}}
 TOKEN:{<Fixed: "fixed">{System.out.println("Fixed");}}
 TOKEN:{<Instanceof: "instanceof">{System.out.println("Instanceof");}}
+TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("EspecificadorDeAlmacenamiento ("+image+") ");}}
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 
 void Start(PrintStream printStream) throws NumberFormatException:
@@ -125,24 +125,24 @@ void Start(PrintStream printStream) throws NumberFormatException:
 		System.out.println("Identificador ("+Integer.toString(i)+")");
 	}
 	|t = <NUMBER>{System.out.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
-	| <Asignacion>|<OperadorAritmeticoBinario>|<Coma>|<Rango>|<DirectivasDePreprocesador>
-	| <OperadoresLogicos>|<FuncionMatematica>|<OperadorRelacional>|<Parentesis>
-	| <Corchete>|<Comentario>|<OperadorAritmetico>|<Llaves>|<ReferenciasPunteros>
-	| <SentenciaIF>|<FuncionesPredefinidas>|<ReferenciaApuntador>|<TipoDeDato>
+	| <Asignacion> | <OperadorAritmeticoBinario> | <Coma> | <Rango> | <DirectivasDePreprocesador>
+	| <OperadoresLogicos> | <FuncionMatematica> | <OperadorRelacional> | <Parentesis>
+	| <Corchete> | <Comentario> | <OperadorAritmetico> | <Llaves> | <ReferenciasPunteros>
+	| <SentenciaIF> | <FuncionesPredefinidas> | <ReferenciaApuntador> | <TipoDeDato>
    	| <AccesoAElementos> | <FinDeLinea> | <ValorNulo>
-	|<ModificadorDeclaracionMiembro>|<EspacioDeNombre>|<SentenciaUsing>
-	|<ProductorDeGeneradores>|<ModificadorDeParametro>|<Ciclos>|<ValorBooleano>
-	|<OperacionesDeConversion>|<DeclaracionDeEvento>
-	|<DeclaracionEnumeracion>|<ModificadorDeTipo>|<DeclaracionDeClase>
-	|<ComprobacionDeDesbordamiento>|<ComponentesSentenciaCase>
-	|<InterrupcionDeProcesos>|<ExpresionDeConversion>|<ExpresionWhere>
-	|<DeclaracionDeTipos>|<ClasesPredefinidas>|<PartesExpresionLet>
-	|<OfExpresionCase>|<Return>| <Comillas> 
-	|<Estructura> | <Extends>
+	| <ModificadorDeclaracionMiembro> | <EspacioDeNombre> | <SentenciaUsing>
+	| <ProductorDeGeneradores> | <ModificadorDeParametro> | <Ciclos> | <ValorBooleano>
+	| <OperacionesDeConversion> | <DeclaracionDeEvento>
+	| <DeclaracionEnumeracion> | <ModificadorDeTipo> | <DeclaracionDeClase>
+	| <ComprobacionDeDesbordamiento> | <ComponentesSentenciaCase>
+	| <InterrupcionDeProcesos> | <ExpresionDeConversion> | <ExpresionWhere>
+	| <DeclaracionDeTipos> | <ClasesPredefinidas> | <PartesExpresionLet>
+	| <OfExpresionCase> | <Return>| <Comillas> 
+	| <Estructura> | <Extends>
 	| <Package> | <Global> | <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn>
 	| <Def> | <Del> | <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
-	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> 
-	| <Var> | <DescriptoresDeAcceso>
-	| <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print> | <Implements> | <Fixed> | <Instanceof>)*
+	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
+	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
+	| <Implements> | <Fixed> | <Instanceof> )*
 	<EOF>
 }
