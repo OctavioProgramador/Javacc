@@ -107,7 +107,7 @@ TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.
 TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAbstract");}}
 TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
-TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExceptiones ("+image+")");}} 
+TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExcepciones ("+image+")");}} 
 /*Identificador*/
 TOKEN: {<Main: "main">{System.out.println("Main");}}
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
@@ -153,6 +153,8 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
-	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
+	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>| <ManejoDeExcepciones>
+	| <ModificadorDeMetodo>| <ModificadorDeAcceso> | <DeclaracionClaseSellada> | <Dllexport>
+	| <Dllimport> | <Extern> | <ModificadorAbstract>)*
 	<EOF>
 }
