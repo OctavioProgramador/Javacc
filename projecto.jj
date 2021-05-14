@@ -67,7 +67,6 @@ TOKEN : {<ModificadorDeclaracionMiembro: "new"|"transient">{System.out.println("
 TOKEN : {<ValorNulo: "null">{System.out.println("ValorNulo");}} // 47
 TOKEN : {<ModificadorDeMetodo: "override">{System.out.println("ModificadorDeMetodo");}} // 48
 TOKEN : {<ModificadorDeAcceso: "public"|"private"|"protected"|"friend" >{System.out.println("ModificadorDeAcceso("+image+")");}} // 49
-TOKEN : {<AsingacionDeUnCampo: "readonly">{System.out.println("AsingacionDeUnCampo");}} // 50
 TOKEN : {<TamanoDeTipo: "sizeof">{System.out.println("TamanoDeTipo");}} // 52
 TOKEN:{<Estructura: "struct">{System.out.println("Estructura");}}
 TOKEN:{<Extends:"extends">{System.out.println("extends");}}
@@ -75,7 +74,9 @@ TOKEN:{<Package:"package">{System.out.println("Package");}}
 TOKEN:{<Global:"global">{System.out.println("Global");}}
 TOKEN:{<Join:"join">{System.out.println("Join");}}
 TOKEN:{<Lock:"lock">{System.out.println("Lock");}}
-TOKEN:{<ImportarExportarFunciones:"dllexport" | "dllimport" | "extern">{System.out.println("Exportar e Importar Funciones,clases,objetos");}}
+TOKEN:{<Dllexport:"dllexport" | | >{System.out.println("Dllexport");}}
+TOKEN:{<Dllimport: "dllimport" >{System.out.println("Dllimport");}}
+TOKEN:{<Extern: "extern">{System.out.println("extern");}}
 TOKEN:{<Noreturn:"noreturn">{System.out.println("noreturn");}}
 TOKEN:{<Def:"def">{System.out.println("Def");}}
 TOKEN:{<Del: "del">{System.out.println("Del");}}
@@ -144,10 +145,10 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <DeclaracionDeTipos> | <ClasesPredefinidas> | <PartesExpresionLet>
 	| <OfExpresionCase> | <Return>| <Comillas> 
 	| <Estructura> | <Extends>
-	| <Package> | <Global> | <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn>
+	| <Package> | <Global> | <Join>| <Lock>| <Dllimport> |<Dllexport>| <Extern>|<Noreturn>
 	| <Def> | <Del> | <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
-	| <Implements> | <Fixed> | <Instanceof> )*
+	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
 	<EOF>
 }
