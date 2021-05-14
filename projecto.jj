@@ -14,6 +14,10 @@ PARSER_BEGIN(lexico)
 PARSER_END(lexico)
 
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
+/*Definiciones regulares*/
+TOKEN : { < #WORD : ((["a"-"z"]|["A"-"Z"]))+ > } 
+TOKEN : { < #SPECIAL : "_" | "@" | "." > }
+/*Componentes lexicos*/	
 TOKEN : { < Asignacion: "="> {System.out.println("Asignacion");}} //1
 TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >  //2
 	{System.out.println("OperadorRelacional ("+image+")");}} 
@@ -28,17 +32,16 @@ TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" >
 	{System.out.println("OperadoresLogicos ("+image+")");}} //9
 TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}} //10
 TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ("+image+")");}} //11
-TOKEN : { < NUMBER : (["0"-"9"])+ >}  
-TOKEN : { < #WORD : ((["a"-"z"]|["A"-"Z"]))+ > } 
-TOKEN : { < #SPECIAL : "_" | "@" | "." > }
+TOKEN : { < NUMBER : (["0"-"9"])+ >{System.out.println("Numero");}  }
 TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}} //13
 TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" > 
 	{System.out.println("DirectivaDePreprocesador ("+image+")");}} //14
 TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("SentenciaIf("+image+")");}} //15
-TOKEN : { < FuncionesPredefinidas : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all"|"count"|"range"|" cycle"|" reperat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" >{System.out.println("Funcion predefinida ("+image+")");}} //16 Dividir mejor esta parte
+TOKEN : { < FuncionesPredefinidasFuncionales : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all">{System.out.println("FuncionPredefinida ("+image+")");}} //16 Dividir mejor esta parte
+TOKEN : { < FuncionesPredefinidasIterativas : "count"|"range"|"cycle"|"repeat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" > { System.out.println("FuncionesPredefinidasIterativas ("+image+")");}}
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}} //16
-TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {System.out.println("Tipo de Dato ("+image+")");}} //17
+TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "long"| "double" | "data" | "function" | "float" | "byte" | "sbyte" | "short" | "ushort" | "int16" | "int64" | "ulong" | "uint" | "nint" > {System.out.println("TipoDeDato ("+image+")");}} //17
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("AccesoAElementos -> " + image);}} //18
 TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
 TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
@@ -67,7 +70,6 @@ TOKEN : {<ModificadorDeclaracionMiembro: "new"|"transient">{System.out.println("
 TOKEN : {<ValorNulo: "null">{System.out.println("ValorNulo");}} // 47
 TOKEN : {<ModificadorDeMetodo: "override">{System.out.println("ModificadorDeMetodo");}} // 48
 TOKEN : {<ModificadorDeAcceso: "public"|"private"|"protected"|"friend" >{System.out.println("ModificadorDeAcceso("+image+")");}} // 49
-TOKEN : {<AsingacionDeUnCampo: "readonly">{System.out.println("AsingacionDeUnCampo");}} // 50
 TOKEN : {<TamanoDeTipo: "sizeof">{System.out.println("TamanoDeTipo");}} // 52
 TOKEN:{<Estructura: "struct">{System.out.println("Estructura");}}
 TOKEN:{<Extends:"extends">{System.out.println("extends");}}
@@ -104,6 +106,7 @@ TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAb
 TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
 TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExceptiones ("+image+")");}} 
+/*Identificador*/
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 
 void Start(PrintStream printStream) throws NumberFormatException:
@@ -128,23 +131,23 @@ void Start(PrintStream printStream) throws NumberFormatException:
 		}
 		System.out.println("Identificador ("+Integer.toString(i)+")");
 	}
-	|t = <NUMBER>{System.out.println("Numero ("+t.beginLine+","+t.beginColumn+")");}
-	| <Asignacion> | <OperadorAritmeticoBinario> | <Coma> | <Rango> | <DirectivasDePreprocesador>
-	| <OperadoresLogicos> | <FuncionMatematica> | <OperadorRelacional> | <Parentesis>
-	| <Corchete> | <Comentario> | <OperadorAritmetico> | <Llaves> | <ReferenciasPunteros>
-	| <SentenciaIF> | <FuncionesPredefinidas> | <ReferenciaApuntador> | <TipoDeDato>
-   	| <AccesoAElementos> | <FinDeLinea> | <ValorNulo>
-	| <ModificadorDeclaracionMiembro> | <EspacioDeNombre> | <SentenciaUsing>
-	| <ProductorDeGeneradores> | <ModificadorDeParametro> | <Ciclos> | <ValorBooleano>
-	| <OperacionesDeConversion> | <DeclaracionDeEvento>
-	| <DeclaracionEnumeracion> | <ModificadorDeTipo> | <DeclaracionDeClase>
-	| <ComprobacionDeDesbordamiento> | <ComponentesSentenciaCase>
-	| <InterrupcionDeProcesos> | <ExpresionDeConversion> | <ExpresionWhere>
-	| <DeclaracionDeTipos> | <ClasesPredefinidas> | <PartesExpresionLet>
-	| <OfExpresionCase> | <Return>| <Comillas> 
-	| <Estructura> | <Extends>
-	| <Package> | <Global> | <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn>
-	| <Def> | <Del> | <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
+	|<NUMBER> |  <Asignacion> | <OperadorAritmeticoBinario> | <Coma> | <Rango> 
+	| <DirectivasDePreprocesador> | <OperadoresLogicos> | <FuncionMatematica> 
+	| <OperadorRelacional> | <Parentesis> | <Corchete> | <Comentario> 
+	| <OperadorAritmetico> | <Llaves> | <ReferenciasPunteros> | <SentenciaIF> 
+	| <FuncionesPredefinidasFuncionales> | <FuncionesPredefinidasIterativas> 
+	| <ReferenciaApuntador> | <TipoDeDato> | <AccesoAElementos> | <FinDeLinea> 
+	| <ValorNulo> | <ModificadorDeclaracionMiembro> | <EspacioDeNombre> 
+	| <SentenciaUsing> | <ProductorDeGeneradores> | <ModificadorDeParametro> 
+	| <Ciclos> | <ValorBooleano> | <OperacionesDeConversion> 
+	| <DeclaracionDeEvento>	| <DeclaracionEnumeracion> | <ModificadorDeTipo> 
+	| <DeclaracionDeClase> | <ComprobacionDeDesbordamiento> 
+	| <ComponentesSentenciaCase> | <InterrupcionDeProcesos> 
+	| <ExpresionDeConversion> | <ExpresionWhere> | <DeclaracionDeTipos> 
+	| <ClasesPredefinidas> | <PartesExpresionLet> | <OfExpresionCase> 
+	| <Return>| <Comillas> | <Estructura> | <Extends> | <Package> | <Global> 
+	| <Join>| <Lock>| <ImportarExportarFunciones> | <Noreturn> | <Def> | <Del> 
+	| <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
 	| <Implements> | <Fixed> | <Instanceof> )*
