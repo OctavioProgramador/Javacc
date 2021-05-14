@@ -100,6 +100,10 @@ TOKEN:{<Implements: "implements">{System.out.println("Implements");}}
 TOKEN:{<Fixed: "fixed">{System.out.println("Fixed");}}
 TOKEN:{<Instanceof: "instanceof">{System.out.println("Instanceof");}}
 TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("EspecificadorDeAlmacenamiento ("+image+") ");}}
+TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAbstract");}}
+TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
+TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
+TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExceptiones ("+image+")");}} 
 TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 
 void Start(PrintStream printStream) throws NumberFormatException:
