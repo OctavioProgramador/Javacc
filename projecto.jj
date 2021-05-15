@@ -155,6 +155,6 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
 	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>| <ManejoDeExcepciones>
 	| <ModificadorDeMetodo>| <ModificadorDeAcceso> | <DeclaracionClaseSellada> | <Dllexport>
-	| <Dllimport> | <Extern> | <ModificadorAbstract>)*
+	| <Dllimport> | <Extern> | <ModificadorAbstract>| <Main>)*
 	<EOF>
 }
