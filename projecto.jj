@@ -209,7 +209,7 @@ void DeclaracionEstructura():
 {
 	<Estructura> <Id> <Rango> ( DeclaracionVariable() )+ <FinDeLinea>
 }
-
+//Funciones//
 void VariableParametro():
 {}
 {
@@ -222,3 +222,101 @@ void Sentencia():
 	( DeclaracionVariable() | Asignacion() | Ciclo() | Condicional() | FuncionVacia() | SalidaEnPantalla() ) <FinDeLinea>
 }
 
+void Metodo():
+{}
+{
+	Encabezado() <Rango> (Sentencia())* <FinDeLinea>
+}
+
+void Funcion():
+{}
+{
+	<TipoDeDato> Encabezado() <Rango> (Sentencia())* Return() <FinDeLinea>
+}
+
+void Variable():
+{}
+{
+	<TipoDeDato> <Tipo>( <ModificadorDeTipo>)? <FinDeLinea>
+}
+
+void FuncionODeclaracion():
+{}
+{
+	(FuncionSinTipo()|DeclaracionSinTipo())
+}
+
+void FuncionSinTipo():
+{}
+{
+	Encabezado() <Rango> (Sentencia())* Return() <FinDeLinea>
+}
+
+void DeclaracionSinTipo():
+{}
+{
+	<ModificadorTipo>? <id> <FinDeLinea>
+}
+
+void FuncionMain():
+{}
+{
+	<Main> <Rango> Sentencia()* <FinDeLinea>
+}
+
+//Cadenas//
+void CadenaString():
+{}
+{
+	<Comillas>.<Comillas>
+}
+
+//Expresiones//
+void Return():
+{}
+{
+	<Return> ExpresionGeneral()
+}
+
+void ExpresionGeneral():
+{}
+{
+	(<Parentesis> ExpresionGeneral() <Parentesis>
+	|<ValorBooleano> ParteDerExpBooleana()
+	|<Id> (ParteDerExpBooleana() |ParteDerExpAritmetica() |ParteDerComparacion() )? 
+	|<Number> (ParteDerExpAritmetica()| ParteDerComparacion() )?
+	|CadenaString())
+}
+
+void ExpresionAritmetica():
+{}
+{
+	(<Parentesis> ExpresionAritmetica() <Parentesis> 
+	|(<Id> | <Number>) ParteDerExpAritmetica?)
+}
+
+void ExpresionBooleana():
+{}
+{
+	(<Parentesis> ExpresionBooleana() <Parentesis> 
+	|<Id> (ParteDerExpBooleana() | ParteDerComparacion() )?
+	|<ValorBooleano> ParteDerExpBooleana()? ) 
+}
+
+void ParteDerExpAritmetica():
+{}
+{
+	<OperadorAritmetico> ExpresionAritmetica()
+}
+
+void ParteDerExpBooleana():
+{}
+{
+	<OperadoresLogicos> ExpresionBooleana()
+}
+
+void ParteDerComparacion():
+{}
+{
+	<OperadorRelacional> ExpresionAritmetica()
+}
