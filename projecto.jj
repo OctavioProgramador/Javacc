@@ -71,39 +71,39 @@ TOKEN : {<ValorNulo: "null">{System.out.println("ValorNulo");}} // 47
 TOKEN : {<ModificadorDeMetodo: "override">{System.out.println("ModificadorDeMetodo");}} // 48
 TOKEN : {<ModificadorDeAcceso: "public"|"private"|"protected"|"friend" >{System.out.println("ModificadorDeAcceso("+image+")");}} // 49
 TOKEN : {<TamanoDeTipo: "sizeof">{System.out.println("TamanoDeTipo");}} // 52
-TOKEN:{<Estructura: "struct">{System.out.println("Estructura");}}
-TOKEN:{<Extends:"extends">{System.out.println("extends");}}
-TOKEN:{<Package:"package">{System.out.println("Package");}}
-TOKEN:{<Global:"global">{System.out.println("Global");}}
-TOKEN:{<Join:"join">{System.out.println("Join");}}
-TOKEN:{<Lock:"lock">{System.out.println("Lock");}}
-TOKEN:{<Dllexport:"dllexport" >{System.out.println("Dllexport");}}
-TOKEN:{<Dllimport: "dllimport" >{System.out.println("Dllimport");}}
-TOKEN:{<Extern: "extern">{System.out.println("extern");}}
-TOKEN:{<Noreturn:"noreturn">{System.out.println("noreturn");}}
-TOKEN:{<Def:"def">{System.out.println("Def");}}
-TOKEN:{<Del: "del">{System.out.println("Del");}}
-TOKEN:{<None: "none">{System.out.println("None");}}
-TOKEN:{<Elif: "elif">{System.out.println("Elif");}}
-TOKEN:{<Nolocal: "nolocal">{System.out.println("Nolocal");}}
-TOKEN:{<Equals: "equals">{System.out.println("Equals");}}
-TOKEN:{<OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("OperadorDeConversion ( "+image+") ");}}
-TOKEN:{<Delete: "delete">{System.out.println("Delete");}}
-TOKEN:{<Object: "object">{System.out.println("Object");}}
-TOKEN:{<Super: "super">{System.out.println("Super");}}
-TOKEN:{<Import: "import">{System.out.println("Import");}}
-TOKEN:{<Strictfp: "strictfp">{System.out.println("Strictfp");}}
-TOKEN:{<Var: "var">{System.out.println("Var");}}
-TOKEN:{<DescriptoresDeAcceso: "get" | "set">{System.out.println("DescriptoresDeAcceso ( "+image+") ");}}
-TOKEN:{<Pass: "pass">{System.out.println("Pass");}}
-TOKEN:{<Typeid: "typeid">{System.out.println("Typeid");}}
-TOKEN:{<Typedef:"typedef">{System.out.println("Typedef");}}
-TOKEN:{<Volatile: "volatile">{System.out.println("Volatile");}}
-TOKEN:{<Print:"print">{System.out.println("Print");}}
-TOKEN:{<Implements: "implements">{System.out.println("Implements");}}
-TOKEN:{<Fixed: "fixed">{System.out.println("Fixed");}}
-TOKEN:{<Instanceof: "instanceof">{System.out.println("Instanceof");}}
-TOKEN:{<EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("EspecificadorDeAlmacenamiento ("+image+") ");}}
+TOKEN: { <Estructura: "struct">{System.out.println("Estructura");}}
+TOKEN: { <Extends:"extends">{System.out.println("extends");}}
+TOKEN: { <Package:"package">{System.out.println("Package");}}
+TOKEN: { <Global:"global">{System.out.println("Global");}}
+TOKEN: { <Join:"join">{System.out.println("Join");}}
+TOKEN: { <Lock:"lock">{System.out.println("Lock");}}
+TOKEN: { <Dllexport:"dllexport" >{System.out.println("Dllexport");}}
+TOKEN: { <Dllimport: "dllimport" >{System.out.println("Dllimport");}}
+TOKEN: { <Extern: "extern">{System.out.println("extern");}}
+TOKEN: { <Noreturn:"noreturn">{System.out.println("noreturn");}}
+TOKEN: { <Def:"def">{System.out.println("Def");}}
+TOKEN: { <Del: "del">{System.out.println("Del");}}
+TOKEN: { <None: "none">{System.out.println("None");}}
+TOKEN: { <Elif: "elif">{System.out.println("Elif");}}
+TOKEN: { <Nolocal: "nolocal">{System.out.println("Nolocal");}}
+TOKEN: { <Equals: "equals">{System.out.println("Equals");}}
+TOKEN: { <OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("OperadorDeConversion ( "+image+") ");}}
+TOKEN: { <Delete: "delete">{System.out.println("Delete");}}
+TOKEN: { <Object: "object">{System.out.println("Object");}}
+TOKEN: { <Super: "super">{System.out.println("Super");}}
+TOKEN: { <Import: "import">{System.out.println("Import");}}
+TOKEN: { <Strictfp: "strictfp">{System.out.println("Strictfp");}}
+TOKEN: { <Var: "var">{System.out.println("Var");}}
+TOKEN: { <DescriptoresDeAcceso: "get" | "set">{System.out.println("DescriptoresDeAcceso ( "+image+") ");}}
+TOKEN: { <Pass: "pass">{System.out.println("Pass");}}
+TOKEN: { <Typeid: "typeid">{System.out.println("Typeid");}}
+TOKEN: { <Typedef:"typedef">{System.out.println("Typedef");}}
+TOKEN: { <Volatile: "volatile">{System.out.println("Volatile");}}
+TOKEN: { <Print:"print">{System.out.println("Print");}}
+TOKEN: { <Implements: "implements">{System.out.println("Implements");}}
+TOKEN: { <Fixed: "fixed">{System.out.println("Fixed");}}
+TOKEN: { <Instanceof: "instanceof">{System.out.println("Instanceof");}}
+TOKEN: { <EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{System.out.println("EspecificadorDeAlmacenamiento ("+image+") ");}}
 TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAbstract");}}
 TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
@@ -153,6 +153,6 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
-	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
+	|<Main> |  <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
 	<EOF>
 }

@@ -9,19 +9,185 @@ public interface lexicoConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int SPACE = 3;
+  int WORD = 6;
   /** RegularExpression Id. */
-  int NUMBER = 4;
+  int SPECIAL = 7;
   /** RegularExpression Id. */
-  int WORDMIN = 5;
+  int Asignacion = 8;
   /** RegularExpression Id. */
-  int WORDMAYUS = 6;
+  int OperadorRelacional = 9;
   /** RegularExpression Id. */
-  int WORD = 7;
+  int Parentesis = 10;
   /** RegularExpression Id. */
-  int SPECIAL = 8;
+  int Corchete = 11;
   /** RegularExpression Id. */
-  int IDENTIFIER = 9;
+  int Comentario = 12;
+  /** RegularExpression Id. */
+  int OperadorAritmetico = 13;
+  /** RegularExpression Id. */
+  int OperadorAritmeticoBinario = 14;
+  /** RegularExpression Id. */
+  int FuncionMatematica = 15;
+  /** RegularExpression Id. */
+  int OperadoresLogicos = 16;
+  /** RegularExpression Id. */
+  int Llaves = 17;
+  /** RegularExpression Id. */
+  int ReferenciasPunteros = 18;
+  /** RegularExpression Id. */
+  int NUMBER = 19;
+  /** RegularExpression Id. */
+  int Coma = 20;
+  /** RegularExpression Id. */
+  int Rango = 21;
+  /** RegularExpression Id. */
+  int DirectivasDePreprocesador = 22;
+  /** RegularExpression Id. */
+  int SentenciaIF = 23;
+  /** RegularExpression Id. */
+  int FuncionesPredefinidasFuncionales = 24;
+  /** RegularExpression Id. */
+  int FuncionesPredefinidasIterativas = 25;
+  /** RegularExpression Id. */
+  int ReferenciaApuntador = 26;
+  /** RegularExpression Id. */
+  int TipoDeDato = 27;
+  /** RegularExpression Id. */
+  int AccesoAElementos = 28;
+  /** RegularExpression Id. */
+  int FinDeLinea = 29;
+  /** RegularExpression Id. */
+  int Comillas = 30;
+  /** RegularExpression Id. */
+  int Return = 31;
+  /** RegularExpression Id. */
+  int OfExpresionCase = 32;
+  /** RegularExpression Id. */
+  int PartesExpresionLet = 33;
+  /** RegularExpression Id. */
+  int ClasesPredefinidas = 34;
+  /** RegularExpression Id. */
+  int DeclaracionDeTipos = 35;
+  /** RegularExpression Id. */
+  int ExpresionWhere = 36;
+  /** RegularExpression Id. */
+  int ExpresionDeConversion = 37;
+  /** RegularExpression Id. */
+  int InterrupcionDeProcesos = 38;
+  /** RegularExpression Id. */
+  int ComponentesSentenciaCase = 39;
+  /** RegularExpression Id. */
+  int ComprobacionDeDesbordamiento = 40;
+  /** RegularExpression Id. */
+  int DeclaracionDeClase = 41;
+  /** RegularExpression Id. */
+  int ModificadorDeTipo = 42;
+  /** RegularExpression Id. */
+  int DeclaracionEnumeracion = 43;
+  /** RegularExpression Id. */
+  int DeclaracionDeEvento = 44;
+  /** RegularExpression Id. */
+  int OperacionesDeConversion = 45;
+  /** RegularExpression Id. */
+  int ValorBooleano = 46;
+  /** RegularExpression Id. */
+  int Ciclos = 47;
+  /** RegularExpression Id. */
+  int ModificadorDeParametro = 48;
+  /** RegularExpression Id. */
+  int ProductorDeGeneradores = 49;
+  /** RegularExpression Id. */
+  int SentenciaUsing = 50;
+  /** RegularExpression Id. */
+  int EspacioDeNombre = 51;
+  /** RegularExpression Id. */
+  int ModificadorDeclaracionMiembro = 52;
+  /** RegularExpression Id. */
+  int ValorNulo = 53;
+  /** RegularExpression Id. */
+  int ModificadorDeMetodo = 54;
+  /** RegularExpression Id. */
+  int ModificadorDeAcceso = 55;
+  /** RegularExpression Id. */
+  int TamanoDeTipo = 56;
+  /** RegularExpression Id. */
+  int Estructura = 57;
+  /** RegularExpression Id. */
+  int Extends = 58;
+  /** RegularExpression Id. */
+  int Package = 59;
+  /** RegularExpression Id. */
+  int Global = 60;
+  /** RegularExpression Id. */
+  int Join = 61;
+  /** RegularExpression Id. */
+  int Lock = 62;
+  /** RegularExpression Id. */
+  int Dllexport = 63;
+  /** RegularExpression Id. */
+  int Dllimport = 64;
+  /** RegularExpression Id. */
+  int Extern = 65;
+  /** RegularExpression Id. */
+  int Noreturn = 66;
+  /** RegularExpression Id. */
+  int Def = 67;
+  /** RegularExpression Id. */
+  int Del = 68;
+  /** RegularExpression Id. */
+  int None = 69;
+  /** RegularExpression Id. */
+  int Elif = 70;
+  /** RegularExpression Id. */
+  int Nolocal = 71;
+  /** RegularExpression Id. */
+  int Equals = 72;
+  /** RegularExpression Id. */
+  int OperadorDeConversion = 73;
+  /** RegularExpression Id. */
+  int Delete = 74;
+  /** RegularExpression Id. */
+  int Object = 75;
+  /** RegularExpression Id. */
+  int Super = 76;
+  /** RegularExpression Id. */
+  int Import = 77;
+  /** RegularExpression Id. */
+  int Strictfp = 78;
+  /** RegularExpression Id. */
+  int Var = 79;
+  /** RegularExpression Id. */
+  int DescriptoresDeAcceso = 80;
+  /** RegularExpression Id. */
+  int Pass = 81;
+  /** RegularExpression Id. */
+  int Typeid = 82;
+  /** RegularExpression Id. */
+  int Typedef = 83;
+  /** RegularExpression Id. */
+  int Volatile = 84;
+  /** RegularExpression Id. */
+  int Print = 85;
+  /** RegularExpression Id. */
+  int Implements = 86;
+  /** RegularExpression Id. */
+  int Fixed = 87;
+  /** RegularExpression Id. */
+  int Instanceof = 88;
+  /** RegularExpression Id. */
+  int EspecificadorDeAlmacenamiento = 89;
+  /** RegularExpression Id. */
+  int ModificadorAbstract = 90;
+  /** RegularExpression Id. */
+  int DeclaracionClaseSellada = 91;
+  /** RegularExpression Id. */
+  int ModificadorSoloLectura = 92;
+  /** RegularExpression Id. */
+  int ManejoDeExcepciones = 93;
+  /** RegularExpression Id. */
+  int Main = 94;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 95;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -29,14 +195,100 @@ public interface lexicoConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
+    "\"\\t\"",
     "\"\\r\"",
     "\"\\r\\n\"",
-    "<SPACE>",
-    "<NUMBER>",
-    "<WORDMIN>",
-    "<WORDMAYUS>",
+    "\"\\n\"",
+    "\" \"",
     "<WORD>",
     "<SPECIAL>",
+    "\"=\"",
+    "<OperadorRelacional>",
+    "<Parentesis>",
+    "<Corchete>",
+    "<Comentario>",
+    "<OperadorAritmetico>",
+    "<OperadorAritmeticoBinario>",
+    "\"sqrt\"",
+    "<OperadoresLogicos>",
+    "<Llaves>",
+    "<ReferenciasPunteros>",
+    "<NUMBER>",
+    "\",\"",
+    "\":\"",
+    "<DirectivasDePreprocesador>",
+    "<SentenciaIF>",
+    "<FuncionesPredefinidasFuncionales>",
+    "<FuncionesPredefinidasIterativas>",
+    "<ReferenciaApuntador>",
+    "<TipoDeDato>",
+    "<AccesoAElementos>",
+    "\";\"",
+    "<Comillas>",
+    "\"return\"",
+    "\"of\"",
+    "<PartesExpresionLet>",
+    "<ClasesPredefinidas>",
+    "\"newtype\"",
+    "\"where\"",
+    "\"as\"",
+    "<InterrupcionDeProcesos>",
+    "<ComponentesSentenciaCase>",
+    "<ComprobacionDeDesbordamiento>",
+    "\"clase\"",
+    "<ModificadorDeTipo>",
+    "\"enum\"",
+    "\"event\"",
+    "<OperacionesDeConversion>",
+    "<ValorBooleano>",
+    "<Ciclos>",
+    "<ModificadorDeParametro>",
+    "\"yield\"",
+    "\"using\"",
+    "\"namespace\"",
+    "<ModificadorDeclaracionMiembro>",
+    "\"null\"",
+    "\"override\"",
+    "<ModificadorDeAcceso>",
+    "\"sizeof\"",
+    "\"struct\"",
+    "\"extends\"",
+    "\"package\"",
+    "\"global\"",
+    "\"join\"",
+    "\"lock\"",
+    "\"dllexport\"",
+    "\"dllimport\"",
+    "\"extern\"",
+    "\"noreturn\"",
+    "\"def\"",
+    "\"del\"",
+    "\"none\"",
+    "\"elif\"",
+    "\"nolocal\"",
+    "\"equals\"",
+    "<OperadorDeConversion>",
+    "\"delete\"",
+    "\"object\"",
+    "\"super\"",
+    "\"import\"",
+    "\"strictfp\"",
+    "\"var\"",
+    "<DescriptoresDeAcceso>",
+    "\"pass\"",
+    "\"typeid\"",
+    "\"typedef\"",
+    "\"volatile\"",
+    "\"print\"",
+    "\"implements\"",
+    "\"fixed\"",
+    "\"instanceof\"",
+    "<EspecificadorDeAlmacenamiento>",
+    "\"abstract\"",
+    "\"sealed\"",
+    "\"readonly\"",
+    "<ManejoDeExcepciones>",
+    "\"main\"",
     "<IDENTIFIER>",
   };
 
