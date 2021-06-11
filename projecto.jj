@@ -27,7 +27,7 @@ TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+
 TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}} //6
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" >  
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}} //7
-TOKEN : { < FuncionMatematica : "sqrt" > {System.out.println("FuncionMatematica ("+image+")");}} //8
+TOKEN : { < FuncionMatematica : "sqrt" | "abs"> {System.out.println("FuncionMatematica ("+image+")");}} //8
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > 
 	{System.out.println("OperadoresLogicos ("+image+")");}} //9
 TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}} //10
@@ -53,7 +53,7 @@ TOKEN : {<DeclaracionDeTipos: "newtype" > {System.out.println("DeclaracionDeTipo
 TOKEN : {<ExpresionWhere : "where" > {System.out.println("ExpresionWhere");}} //27
 TOKEN : {<ExpresionDeConversion: "as" >{System.out.println("as");}} //30
 TOKEN : {<InterrupcionDeProcesos: "continue" | "break" >{System.out.println("InterrupcionDeProcesos ("+image+")");}} //31
-TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default"|"goto" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
+TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
 TOKEN : {<ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
 TOKEN : {<DeclaracionDeClase: "clase" >{System.out.println("DeclaracionDeClase");}} //35
 TOKEN : {<ModificadorDeTipo: "const"|"signed"|"unsigned" >{System.out.println("ModificadorDeTipo("+image+")");}} //36
@@ -107,10 +107,10 @@ TOKEN: { <EspecificadorDeAlmacenamiento: "register" | "mutable" |"static">{Syste
 TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAbstract");}}
 TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
-TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExceptiones ("+image+")");}} 
+TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExcepciones ("+image+")");}} 
 /*Identificador*/
 TOKEN: {<Main: "main">{System.out.println("Main");}}
-TOKEN : { < IDENTIFIER : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
+TOKEN : { < Id : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
 
 void Start(PrintStream printStream) throws NumberFormatException:
 {
@@ -119,7 +119,8 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	tabla = new ArrayList<String>();
 }
 {
-	(t = <IDENTIFIER> {
+	/*
+	(t = <Id> {
 		String palabra = t.image;
 		int i = 0;
 		for (; i < tabla.size(); i++)
@@ -134,6 +135,7 @@ void Start(PrintStream printStream) throws NumberFormatException:
 		}
 		System.out.println("Identificador ("+Integer.toString(i)+")");
 	}
+	/*
 	|<NUMBER> |  <Asignacion> | <OperadorAritmeticoBinario> | <Coma> | <Rango> 
 	| <DirectivasDePreprocesador> | <OperadoresLogicos> | <FuncionMatematica> 
 	| <OperadorRelacional> | <Parentesis> | <Corchete> | <Comentario> 
@@ -153,6 +155,70 @@ void Start(PrintStream printStream) throws NumberFormatException:
 	| <None> | <Elif> | <Nolocal> | <Equals> | <OperadorDeConversion> | <Delete> | <Object>
 	| <EspecificadorDeAlmacenamiento> | <Super> | <Import> | <Strictfp> | <Var>
 	| <DescriptoresDeAcceso> | <Pass> | <Typeid> | <Typedef> | <Volatile> | <Print>
-	|<Main> |  <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>)*
+	| <Implements> | <Fixed> | <Instanceof> | <TamanoDeTipo> | <ModificadorSoloLectura>| <ManejoDeExcepciones>
+	| <ModificadorDeMetodo>| <ModificadorDeAcceso> | <DeclaracionClaseSellada> | <Dllexport>
+	| <Dllimport> | <Extern> | <ModificadorAbstract>| <Main>)*
+          */
+	Programa()
 	<EOF>
 }
+
+// Gramatica
+void Programa():
+{}
+{
+	( Librerias() )? ( Clase() | Funcion() | DeclaracionEstructura )* FuncionMain()
+}
+
+void Librerias():
+{
+	<DirectivasDePreprocesador> <Id> <AccesoAElementos> <Id>
+}
+
+void Clase():
+{}
+{
+	<DeclaracionDeClase> <Id> <Rango> (BloqueModificadorAcceso() | Constructor())+ <FinDeLinea>
+}
+
+void BloqueModificadorAcceso():
+{
+	<ModificadorDeAcceso> <Llaves> ( <TipoDeDato> FuncionDeclaracion() | Metodo() )+ <Llaves>
+}
+
+void Constructor():
+{}
+{
+	Encabezado() <Rango> ( Sentencia() )* <FinDeLinea>
+}
+
+void Encabezado():
+{}
+{
+	<Id> Parametros()
+}
+
+void Parametros():
+{}
+{
+	( ( VariableParametro() <Coma> )* VariableParametro() )?
+}
+
+void DeclaracionEstructura():
+{}
+{
+	<Estructura> <Id> <Rango> ( DeclaracionVariable() )+ <FinDeLinea>
+}
+
+void VariableParametro():
+{}
+{
+	( <ReferenciasPunteros> )? DeclaracionVariable()
+}
+
+void Sentencia():
+{}
+{
+	( DeclaracionVariable() | Asignacion() | Ciclo() | Condicional() | FuncionVacia() | SalidaEnPantalla() ) <FinDeLinea>
+}
+
