@@ -254,20 +254,6 @@ void Funcion():
 	<TipoDeDato> Encabezado() <Rango> (Sentencia())* Return() <FinDeLinea>
 }
 
-
-
-void FuncionSinTipo():
-{}
-{
-	Encabezado() <Rango> (Sentencia())* Return() <FinDeLinea>
-}
-
-void DeclaracionSinTipo():
-{}
-{
-	<ModificadorDeTipo>? <id> <FinDeLinea>
-}
-
 void FuncionMain():
 {}
 {
@@ -293,9 +279,9 @@ void ExpresionGeneral():
 {
 	(<Parentesis> ExpresionGeneral() <Parentesis>
 	|<ValorBooleano> ParteDerExpBooleana()
-	|<Id> (ParteDerExpBooleana() |ParteDerExpAritmetica() |ParteDerComparacion() )? 
+	|<Id> (ParteDerExpBooleana() |ParteDerExpAritmeticaOString() |ParteDerComparacion() )? 
 	|<Number> (ParteDerExpAritmetica()| ParteDerComparacion() )?
-	|CadenaString())
+	|CadenaString() (ParteDerExpString()) ?)
 }
 
 void ExpresionAritmetica():
@@ -310,7 +296,15 @@ void ExpresionBooleana():
 {
 	(<Parentesis> ExpresionBooleana() <Parentesis> 
 	|<Id> (ParteDerExpBooleana() | ParteDerComparacion() )?
-	|<ValorBooleano> ParteDerExpBooleana()? )
+	|<ValorBooleano> (ParteDerExpBooleana())? )
+}
+
+void ExpresionString():
+{}
+{
+	(<Parentesis> ExpresionString() <Parentesis> 
+	|<Id> (ParteDerExpString())?
+	|CadenaString() (ParteDerExpString())? )
 }
 
 void ParteDerExpAritmetica():
@@ -330,3 +324,18 @@ void ParteDerComparacion():
 {
 	<OperadorRelacional> ExpresionAritmetica()
 }
+
+void ParteDerExpString():
+{}
+{
+	<OperadorAritmetico> ExpresionString()
+}
+//27
+void ParteDerExpAritmeticaOString():
+{}
+{
+
+void SentenciaAsignacion():
+{}
+{
+	ExpresionGeneral() OperadorRelacional
