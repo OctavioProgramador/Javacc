@@ -330,3 +330,39 @@ void ParteDerComparacion():
 {
 	<OperadorRelacional> ExpresionAritmetica()
 }
+//Condicionales//
+void Condicional()
+{}
+{
+	(CondicionIf()| CondicionCase())
+}
+
+void CondicionIf()
+{}
+{
+	<SentenciaIF> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea> (<Elif> ExpresionBooleana() (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
+}
+
+void CondicionCase()
+{}
+{
+	<Switch> <Id> <Rango> (<Case> <Id> <Rango> (Sentencia())+ <Break>)* (<CasoDefault> <Rango> (Sentencia())+ <Break> )? <FinDeLinea>
+}
+
+void SalidaEnPantalla()
+{}
+{
+	<Print> ExpresionGeneral() <FinDeLinea>
+}
+
+void ReferenciaSuperclase()
+{}
+{
+	<DeclaracionDeClase> <Id> <Extends> <Id> <Rango>
+}
+
+void ReferenciaSuperclaseAtributo()
+{}
+{
+	<Super> <#SPECIAL> <Id>
+}
