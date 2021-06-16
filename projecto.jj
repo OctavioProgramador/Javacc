@@ -68,7 +68,7 @@ TOKEN : {<ValorBooleano: "true"|"false">{System.out.println("ValorBooleano("+ima
 TOKEN : {<Ciclos: "do"|" while"|"for"|"foreach">{System.out.println("Ciclo("+image+")");}} // 41
 TOKEN : {<ModificadorDeParametro: "in"|"out"|"params"|"ref" >{System.out.println("ModificadorDeParametro("+image+")");}} // 42
 TOKEN : {<ProductorDeGeneradores: "yield">{System.out.println("ProductorDeGeneradores");}} // 43
-TOKEN : {<SentenciaUsing: "using">{System.out.println("SentenciaUsing");}} // 44
+TOKEN : {<Using: "using">{System.out.println("SentenciaUsing");}} // 44
 TOKEN : {<EspacioDeNombre: "namespace">{System.out.println("EspacioDeNombre");}} // 45
 TOKEN : {<ModificadorDeclaracionMiembro: "new"|"transient">{System.out.println("ModificadorDeclaracionMiembro("+image+")");}} // 46
 TOKEN : {<ValorNulo: "null">{System.out.println("ValorNulo");}} // 47
