@@ -24,7 +24,7 @@ TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >  //2
 TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}} //3
 TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}} //4
 TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}} //5
-TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}} //6
+TOKEN : { < OperadorAritmeticoUnario: "++" | "--" > {System.out.println("OperadorAritmeticoUnario ("+image+")");}} //6
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" >  
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}} //7
 TOKEN : { < FuncionMatematica : "sqrt" | "abs"> {System.out.println("FuncionMatematica ("+image+")");}} //8
@@ -47,7 +47,8 @@ TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
 TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
 TOKEN : {<Return: "return">{System.out.println("return");}} //22
 TOKEN : {<Of: "of">{System.out.println("OfExpresionCase");}} //23
-TOKEN : {<PartesExpresionLet: "let" | "in" >{System.out.println("ParteExpresionLet ("+image+")");}} //24
+TOKEN : {<Let: "let" >{System.out.println("in");}} //24
+TOKEN : {<In: "in" >{System.out.println("let ");}}
 TOKEN : {<ClasesPredefinidas: "BinaryTree"|"vector"|"Leaf"|"Branch" >{System.out.println("ClasesPredefinidas ("+image+")");}} //25
 TOKEN : {<DeclaracionDeTipos: "newtype" > {System.out.println("DeclaracionDeTipos");}} //26
 TOKEN : {<ExpresionWhere : "where" > {System.out.println("ExpresionWhere");}} //27
@@ -311,7 +312,7 @@ void ExpresionString():
 void ParteDerExpAritmetica():
 {}
 {
-	<OperadorAritmetico> ExpresionAritmetica()
+	<OperadorAritmeticoBinario> ExpresionAritmetica()
 }
 void ParteDerExpBooleana():
 {}
@@ -326,12 +327,12 @@ void ParteDerComparacion():
 void ParteDerExpString():
 {}
 {
-	<OperadorAritmetico> ExpresionString()
+	<OperadorAritmeticoBinario> ExpresionString()
 }
 void ParteDerExpAritmeticaOString():
 {}
 {
-	<OperadorAritmetico> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() ( ParteDerExpString() | ParteDerExpAritmetica() )? | CadenaString() ( ParteDerExpString() )? | <Number> ( ParteDerExpAritmetica())? )
+	<OperadorAritmeticoBinario> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() ( ParteDerExpString() | ParteDerExpAritmetica() )? | CadenaString() ( ParteDerExpString() )? | <Number> ( ParteDerExpAritmetica())? )
 }
 
 void FuncionOArreglo():
