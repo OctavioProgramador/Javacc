@@ -383,7 +383,7 @@ void Condicional()
 {
 	(CondicionIf()| CondicionCase())
 }
-
+:
 void CondicionIf()
 {}
 {
@@ -452,4 +452,78 @@ void AccesoAElementoArreglo():
 {
 	(<Corchete> ExpresionAritmetica() <Corchete>)+
 }
+
+void ExpresionFuncional():
+{}
+{
+	<Def> <Id> ( <Id> )* <Asignacion> CuerpoExpresionFuncional() <FinDeLinea>
+}
+
+void CuerpoExpresionFuncional():
+{}
+{
+	(Lista()| (<Id>)* ( <Llaves> (( <Id> <Coma>)* <Id> )?<Llaves>)? (ParteDerExpFun())? | <FuncionesPredefinidasFuncionales> <Llaves> ExpresionFuncional() <Llaves> (ParteDerExpFun())? )
+}
+
+void ParteDerExpFun():
+{}
+{
+	<OperadorAritmeticoBinario> ExpresionFuncional()
+}
+
+void Lista():
+{}
+{
+	<Llaves> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Llaves>
+}
+
+//Expresion let in
+
+void ExpresionLetIn():
+{
+	<Let> ( <TipoDeDato> )? <Id> ( <Asignacion> ExpresionGeneral() )? ( <In> DefinicionLetIn )? <FinDeLinea>
+}
+
+void DefinicionLetIn():
+{}
+{
+	( ( <Id> <Asignacion>)? ExpresionGeneral())+
+}
+
+// Enumeracion
+
+void Enumeracion():
+{}
+{
+	<DeclaracionEnumeracion> <Id> <Rango> ( <Id> <Coma> )+ <Id> <FinDeLinea>
+}
+
+void AccesoEnumeracion():
+{}
+{
+	<Id> <AccesoAElementos> <Id>
+}
+
+//Comentarios
+
+void ComentarioMultilinea():
+{}
+{
+	<Comentario> . <Comentario>
+}
+
+//Namespace
+
+void SentenciaNamespace():
+{}
+{
+	<EspacioDeNombre> <Id> <Rango> ( Sentencia() )+ <FinDeLinea>
+}
+
+void ReferenciaNamespace():
+{}
+{
+	<EspacioDeNombre> <Rango> <Rango> <Id> ( <Parentesis> <Parentesis> | <Rango> (Sentencia())+ ) <FinDeLinea>
+}
+
 
