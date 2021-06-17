@@ -208,6 +208,11 @@ void DeclaracionEstructura():
 {
 	<Estructura> <Id> <Rango> ( DeclaracionVariable() )+ <FinDeLinea>
 }
+void InstanciaObjeto():
+{}
+{
+	ModificadorDeclaracionMiembro (<Id> | <ClasesPredefinidas>) ( IngresarParametros())
+}
 // Funciones
 void Encabezado():
 {}
@@ -248,6 +253,12 @@ void Metodo():
 {}
 {
 	Encabezado() <Rango> (Sentencia())* <FinDeLinea>
+}
+
+void InvocarMetodo():
+{}
+{
+	<Id> InvocacionFuncion()
 }
 
 void Funcion():
@@ -346,6 +357,17 @@ void SentenciaAsignacion():
 	ExpresionGeneral() <OperadorRelacional> <Id> <FinDeLinea>
 }
 
+void SentenciaAritmeticaUnaria():
+{}
+{
+	<Id> <OperacionAritmeticaUnaria>
+}
+
+void DelcaracionVariableGlobal():
+{}
+{
+	<Global> <Id> (<Rango> ExpresionAritmetica() <Rango> ) ? <FinDeLinea>
+}
 //Ciclos//
 void Ciclo():
 {}
@@ -356,9 +378,14 @@ void Ciclo():
 void CicloFor():
 {}
 {
-
+	<for> RangoNumerico() <Rango> (Sentencia()+) <FinDeLinea>  
 }
 
+void RangoNumerico():
+{}
+{
+	<Corchete> <Number> <Rango> <Number> <Corchete>
+}
 void CicloForeach():
 {}
 {
@@ -453,6 +480,31 @@ void AccesoAElementoArreglo():
 	(<Corchete> ExpresionAritmetica() <Corchete>)+
 }
 
+void InicializacionArreglo():
+{}
+{
+	Arreglo() <Asignacion> <Id>
+}
+
+void Arreglo():
+{}
+{
+	<Llaves> (Vector() <Rango>)* Vector() <Llaves>
+}
+
+void Vector():
+{}
+{
+	(ElementosDeArreglo() <Coma>)* ElementosDeArreglo()
+}
+
+void ElementosDeArreglo():
+{}
+{
+	(<Id> | Arreglo() | <Number> | CadenaString())
+}
+
+//Programacion Funcional
 void ExpresionFuncional():
 {}
 {
@@ -526,4 +578,54 @@ void ReferenciaNamespace():
 	<EspacioDeNombre> <Rango> <Rango> <Id> ( <Parentesis> <Parentesis> | <Rango> (Sentencia())+ ) <FinDeLinea>
 }
 
+void SentenciaUsing ():
+{}
+{
+	<Using> <EspacioDeNombre> <Id>
+}
+
+//Importacion y Exportacion de Dllexport
+void ExportarDLL():
+{}
+{
+	<DirectivasDePreprocesador> <Id> <Parentesis> <Dllexport> <Rango> (Sentencia()+) <FinDeLinea>
+}
+
+void ImportarDLL():
+{}
+{
+	<dllimport> <Llaves> <Id> <Llaves> <FinDeLinea>
+}
+
+//Otras
+void ObtenerTamanoDeTipo():
+{}
+{
+	<TamanoDeTipo> <TipoDeDato>
+}
+void RenombreDeTipo():
+{}
+{
+	<DeclaracionDeTipos> <TipoDeDato> <Rango> <Id>
+}
+void Conversion():
+{}
+{
+	<Id> <ExpresionDeConversion> <TipoDeDato>
+}
+void ComprobacionDeTipoOClase():
+{}
+{
+	<Id> <Instanceof> (<Id> | <Struct> | <TipoDeDato>)
+}
+void VariableNoLocal():
+{}
+{
+	<Nolocal> <Id>
+}
+void Lectura():
+{}
+{
+	<Read> <Id>
+}
 
