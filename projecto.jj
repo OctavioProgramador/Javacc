@@ -201,7 +201,6 @@ void FuncionSinNombreNiTipo():
 }
 //7
 void Constructor():
-{}
 {
 	Encabezado() <Rango> ( Sentencia() )* <FinDeLinea>
 }
@@ -339,79 +338,4 @@ void ParteDerExpAritmetica():
 {}
 {
 	<OperadorAritmetico> ExpresionAritmetica()
-}
-//27 
-void ParteDerExpBooleana():
-{}
-{
-	<OperadoresLogicos> ExpresionBooleana()
-}
-//28
-void ParteDerComparacion():
-{}
-{
-	<OperadorRelacional> ExpresionAritmetica()
-}
-//29
-void ParteDerExpString():
-{}
-{
-	<OperadorAritmetico> ExpresionString()
-}
-//30
-void ParteDerExpAritmeticaOString():
-{}
-{
-	<OperadorAritmetico> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() ( ParteDerExpString() | ParteDerExpAritmetica() )? | CadenaString() ( ParteDerExpString() )? | <Number> ( ParteDerExpAritmetica())? )
-}
-
-//31
-void FuncionOArreglo():
-{}
-{
-	(AccesoAElementoArreglo() | InvocacionFuncion())?
-}
-
-//32
-void SentenciaAsignacion():
-{}
-{
-	ExpresionGeneral() <OperadorRelacional>
-}
-
-//Condicionales//
-void Condicional()
-{}
-{
-	(CondicionIf()| CondicionCase())
-}
-
-void CondicionIf()
-{}
-{
-	<SentenciaIF> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea> (<Elif> ExpresionBooleana() (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
-}
-
-void CondicionCase()
-{}
-{
-	<Switch> <Id> <Rango> (<Case> <Id> <Rango> (Sentencia())+ <Break>)* (<CasoDefault> <Rango> (Sentencia())+ <Break> )? <FinDeLinea>
-}
-
-void SalidaEnPantalla()
-{}
-{
-	<Print> ExpresionGeneral() <FinDeLinea>
-}
-
-void ReferenciaSuperclase()
-{}
-{
-	<DeclaracionDeClase> <Id> <Extends> <Id> <Rango>
-}
-
-void ReferenciaSuperclaseAtributo()
-{}
-{
-	<Super> <#SPECIAL> <Id>
 }
