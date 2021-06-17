@@ -24,7 +24,7 @@ TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >  //2
 TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}} //3
 TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}} //4
 TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}} //5
-TOKEN : { < OperadorAritmetico: "++" | "--" > {System.out.println("OperadorAritmetico ("+image+")");}} //6
+TOKEN : { < OperadorAritmeticoUnario: "++" | "--" > {System.out.println("OperadorAritmeticoUnario ("+image+")");}} //6
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "*=" | "/=" >  
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}} //7
 TOKEN : { < FuncionMatematica : "sqrt" | "abs"> {System.out.println("FuncionMatematica ("+image+")");}} //8
@@ -46,15 +46,19 @@ TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("AccesoAElementos -> "
 TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
 TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
 TOKEN : {<Return: "return">{System.out.println("return");}} //22
-TOKEN : {<OfExpresionCase: "of">{System.out.println("OfExpresionCase");}} //23
-TOKEN : {<PartesExpresionLet: "let" | "in" >{System.out.println("ParteExpresionLet ("+image+")");}} //24
+TOKEN : {<Of: "of">{System.out.println("OfExpresionCase");}} //23
+TOKEN : {<Let: "let" >{System.out.println("in");}} //24
+TOKEN : {<In: "in" >{System.out.println("let ");}}
 TOKEN : {<ClasesPredefinidas: "BinaryTree"|"vector"|"Leaf"|"Branch" >{System.out.println("ClasesPredefinidas ("+image+")");}} //25
 TOKEN : {<DeclaracionDeTipos: "newtype" > {System.out.println("DeclaracionDeTipos");}} //26
 TOKEN : {<ExpresionWhere : "where" > {System.out.println("ExpresionWhere");}} //27
 TOKEN : {<ExpresionDeConversion: "as" >{System.out.println("as");}} //30
 TOKEN : {<InterrupcionDeProcesos: "continue" | "break" >{System.out.println("InterrupcionDeProcesos ("+image+")");}} //31
-TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
-TOKEN : {<ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
+// TOKEN : {<ComponentesSentenciaCase: "switch"|"case"|"default" >{System.out.println("ComponentesSentenciaCase("+image+")");}} //32
+TOKEN : { <Case: "case" > {System.out.println("Case");}}// cambio hay que ver donde poner el switch
+TOKEN : { <Switch: "switch" > {System.out.println("Switch");}}// No pude hacer el case como lo planee
+TOKEN : { <CasoDefatult: "default">{System.out.println("Default");}}
+TOKEN : { <ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
 TOKEN : {<DeclaracionDeClase: "clase" >{System.out.println("DeclaracionDeClase");}} //35
 TOKEN : {<ModificadorDeTipo: "const"|"signed"|"unsigned" >{System.out.println("ModificadorDeTipo("+image+")");}} //36
 TOKEN : {<DeclaracionEnumeracion: "enum">{System.out.println("DeclaracionEnumeracion");}} //37
@@ -64,7 +68,7 @@ TOKEN : {<ValorBooleano: "true"|"false">{System.out.println("ValorBooleano("+ima
 TOKEN : {<Ciclos: "do"|" while"|"for"|"foreach">{System.out.println("Ciclo("+image+")");}} // 41
 TOKEN : {<ModificadorDeParametro: "in"|"out"|"params"|"ref" >{System.out.println("ModificadorDeParametro("+image+")");}} // 42
 TOKEN : {<ProductorDeGeneradores: "yield">{System.out.println("ProductorDeGeneradores");}} // 43
-TOKEN : {<SentenciaUsing: "using">{System.out.println("SentenciaUsing");}} // 44
+TOKEN : {<Using: "using">{System.out.println("SentenciaUsing");}} // 44
 TOKEN : {<EspacioDeNombre: "namespace">{System.out.println("EspacioDeNombre");}} // 45
 TOKEN : {<ModificadorDeclaracionMiembro: "new"|"transient">{System.out.println("ModificadorDeclaracionMiembro("+image+")");}} // 46
 TOKEN : {<ValorNulo: "null">{System.out.println("ValorNulo");}} // 47
@@ -85,7 +89,7 @@ TOKEN: { <Def:"def">{System.out.println("Def");}}
 TOKEN: { <Del: "del">{System.out.println("Del");}}
 TOKEN: { <None: "none">{System.out.println("None");}}
 TOKEN: { <Elif: "elif">{System.out.println("Elif");}}
-TOKEN: { <Nolocal: "nolocal">{System.out.println("Nolocal");}}
+TOKEN: { <Nolocal: "nonlocal">{System.out.println("Nonlocal");}}
 TOKEN: { <Equals: "equals">{System.out.println("Equals");}}
 TOKEN: { <OperadorDeConversion: "reinterpret_cast" | "dynamic_cast">{System.out.println("OperadorDeConversion ( "+image+") ");}}
 TOKEN: { <Delete: "delete">{System.out.println("Delete");}}
@@ -108,6 +112,8 @@ TOKEN : { < ModificadorAbstract : "abstract" >{System.out.println("ModificadorAb
 TOKEN : { < DeclaracionClaseSellada : "sealed" >{System.out.println("sealed");}}
 TOKEN : { < ModificadorSoloLectura : "readonly" >{System.out.println("readonly");}}
 TOKEN : { < ManejoDeExcepciones : "try"|"catch"|"finally"|"throw"|"throws" >{System.out.println("ManejoDeExcepciones ("+image+")");}} 
+TOKEN : { < DeclaracionTry : "try" > {System.out.println("Declaracion Try");
+TOKEN : { < DeclaracionCatch : "catch" > {System.out.println("Declaracion Catch");
 /*Identificador*/
 TOKEN: {<Main: "main">{System.out.println("Main");}}
 TOKEN : { < Id : (<WORD>)+(<NUMBER>|<NUMBER>|<SPECIAL>)* >}
@@ -164,121 +170,96 @@ void Start(PrintStream printStream) throws NumberFormatException:
 }
 
 // Gramatica
-//1
 void Programa():
 {}
 {
 	( Librerias() )* ( Clase() | Funcion() | DeclaracionEstructura )* FuncionMain()
 }
-//2
 void Librerias():
 {
 	<DirectivasDePreprocesador> <Id> <AccesoAElementos> <Id>
 }
 
-//3
 void Clase():
 {}
 {
 	<DeclaracionDeClase> <Id> <Rango> (BloqueModificadorAcceso() | Constructor())+ <FinDeLinea>
 }
-//4
 void BloqueModificadorAcceso():
 {
 	<ModificadorDeAcceso> <Llaves> ( FuncionODeclaracion() | Metodo() )+ <Llaves>
 }
-//5
 void FuncionODeclaracion():
 {}
 {
 	<TipoDeDato> ( <ModificadorDeAcceso> <Id> | <Id> ( FuncionSinNombreNiTipo() )? ) <FinDeLinea>
 }
-//6
 void FuncionSinNombreNiTipo():
 {}
 {
 	Parametros() <Rango> ( Sentencia() )* ExpresionReturn() 
 }
-//7
 void Constructor():
 {
 	Encabezado() <Rango> ( Sentencia() )* <FinDeLinea>
 }
-//8
 void DeclaracionEstructura():
 {}
 {
 	<Estructura> <Id> <Rango> ( DeclaracionVariable() )+ <FinDeLinea>
 }
-//9
-void InstanciaObjeto():
-{}
-{
-	<ModificadorDeclaracionMiembro> <Id> <Parentesis> IngresarParametros() <Parentesis>
-}
-
 // Funciones
-//10
 void Encabezado():
 {}
 {
 	<Id> Parametros()
 }
 
-//11
 void IngresarParametros():
 {}
 {
 	((<Id> ( AccesoAElementoArreglo | InvocacionFuncion())? <Coma> )* <Id> (AccesoAElementoArreglo() | InvocacionFuncion())? )?
 }
-//12
 void Parametros():
 {}
 {
 	( ( VariableParametro() <Coma> )* VariableParametro() )?
 }
 
-//13
 void VariableParametro():
 {}
 {
 	( <ReferenciasPunteros> )? DeclaracionVariable()
 }
 
-//14
 void DeclaracionVariable():
 {}
 {
 	<TipoDeDato> ( <ModificadorDeTipo> )? <Id> <FinDeLinea>
 }
 
-//15
 void Sentencia():
 {}
 {
 	( DeclaracionVariable() | SentenciaAsignacion() | Ciclo() | Condicional() | Metodo() | SalidaEnPantalla() | DeclaracionArreglo()) <FinDeLinea>
 }
 
-//16
 void Metodo():
 {}
 {
 	Encabezado() <Rango> (Sentencia())* <FinDeLinea>
 }
 
-//17
 void Funcion():
 {}
 {
 	<TipoDeDato> Encabezado() <Rango> (Sentencia())* ExpresionReturn() <FinDeLinea>
 }
-//18
 void FuncionMain():
 {}
 {
 	<Main> <Rango> Sentencia()* <FinDeLinea>
 }
-//19
 void InvocacionFuncion():
 {}
 {
@@ -286,7 +267,6 @@ void InvocacionFuncion():
 }
 
 //Cadenas//
-//20
 void CadenaString():
 {}
 {
@@ -294,13 +274,11 @@ void CadenaString():
 }
 
 //Expresiones// 
-//21
 void ExpresionReturn():
 {}
 {
 	<Return> ExpresionGeneral()
 }
-//22
 void ExpresionGeneral():
 {}
 {
@@ -310,14 +288,12 @@ void ExpresionGeneral():
 	|<Number> (ParteDerExpAritmetica()| ParteDerComparacion() )?
 	|CadenaString() (ParteDerExpString()) ?)
 }
-//23
 void ExpresionAritmetica():
 {}
 {
 	(<Parentesis> ExpresionAritmetica() <Parentesis> 
 	|(<Id> FuncionOArreglo()| <Number>) ParteDerExpAritmetica?)
 }
-//24
 void ExpresionBooleana():
 {}
 {
@@ -325,7 +301,6 @@ void ExpresionBooleana():
 	|<Id> FuncionOArreglo()(ParteDerExpBooleana() | ParteDerComparacion() )?
 	|<ValorBooleano> (ParteDerExpBooleana())? )
 }
-//25 
 void ExpresionString():
 {}
 {
@@ -333,9 +308,148 @@ void ExpresionString():
 	|<Id> FuncionOArreglo() (ParteDerExpString())?
 	|CadenaString() (ParteDerExpString())? )
 }
-//26
 void ParteDerExpAritmetica():
 {}
 {
-	<OperadorAritmetico> ExpresionAritmetica()
+	<OperadorAritmeticoBinario> ExpresionAritmetica()
 }
+void ParteDerExpBooleana():
+{}
+{
+	<OperadoresLogicos> ExpresionBooleana()
+}
+void ParteDerComparacion():
+{}
+{
+	<OperadorRelacional> ExpresionAritmetica()
+}
+void ParteDerExpString():
+{}
+{
+	<OperadorAritmeticoBinario> ExpresionString()
+}
+void ParteDerExpAritmeticaOString():
+{}
+{
+	<OperadorAritmeticoBinario> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() ( ParteDerExpString() | ParteDerExpAritmetica() )? | CadenaString() ( ParteDerExpString() )? | <Number> ( ParteDerExpAritmetica())? )
+}
+
+void FuncionOArreglo():
+{}
+{
+	(AccesoAElementoArreglo() | InvocacionFuncion())?
+}
+
+void SentenciaAsignacion():
+{}
+{
+	ExpresionGeneral() <OperadorRelacional> <Id> <FinDeLinea>
+}
+
+//Ciclos//
+void Ciclo():
+{}
+{
+	<Ciclos> ( CicloWhile() | CicloFor() | CicloForeach() | CicloWhile() )
+}
+
+void CicloFor():
+{}
+{
+
+}
+
+void CicloForeach():
+{}
+{
+	<TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
+}
+
+void CicloWhile():
+{}
+{
+	ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
+}
+
+void CicloDoWhile():
+{}
+{
+	<Llaves> ExpresionBooleana <Llaves> <Rango> (Sentencia())+ <FinDeLinea>
+}
+
+//Condicionales//
+void Condicional()
+{}
+{
+	(CondicionIf()| CondicionCase())
+}
+
+void CondicionIf()
+{}
+{
+	<SentenciaIF> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea> (<Elif> ExpresionBooleana() (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
+}
+
+void CondicionCase()
+{}
+{
+	<Switch> <Id> <Rango> (<Case> <Id> <Rango> (Sentencia())+ <Break>)* (<Case> <CasoDefault> <Rango> (Sentencia())+ <Break> )? <FinDeLinea>
+}
+
+void SalidaEnPantalla()
+{}
+{
+	<Print> ExpresionGeneral() <FinDeLinea>
+}
+
+void ReferenciaSuperclase()
+{}
+{
+	<DeclaracionDeClase> <Id> <Extends> <Id> <Rango>
+}
+
+void ReferenciaSuperclaseAtributo()
+{}
+{
+	<Super> <AccesoAElementos> <Id>
+}
+
+// Control de excepciones
+
+void DeclaracionTryCatch():
+{}
+{
+	SentenciaTry() SentenciaCatch()
+}
+
+void SentenciaTry():
+{}
+{
+	<SentenciaTry> <Rango> (Sentencia())+ <FinDeLinea> 
+}
+
+void SentenciaCatch():
+{}
+{
+	<DeclaracionCatch> <Rango> (Sentencia())* <FinDeLinea>
+}
+
+//Arreglos
+void DeclaracionArreglo():
+{}
+{
+	SentenciaCorchetes() <Asignacion> <TipoDeDato> <Id> <FinDeLinea>
+}
+
+void SentenciaCorchetes():
+{}
+{
+	(<Corchete> <Corchete>)+
+}
+
+void AccesoAElementoArreglo():
+{}
+{
+	(<Corchete> ExpresionAritmetica() <Corchete>)+
+}
+
