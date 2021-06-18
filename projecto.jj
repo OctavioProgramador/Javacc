@@ -388,7 +388,7 @@ void FuncionOArreglo():
 void SentenciaAsignacion():
 {}
 {
-	ExpresionGeneralSinId() <OperadorRelacional> <Id> 
+	ExpresionGeneralSinId() <Asignacion> <Id> 
 }
 
 void DeclaracionVariableGlobal():
