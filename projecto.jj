@@ -179,14 +179,20 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	( Librerias() | ComentarioMultilinea())* ( Clase() | Funcion() | DeclaracionEstructura() 
+	(DirectivaReferencia()| ComentarioMultilinea())* ( Clase() | Funcion() | DeclaracionEstructura() 
 	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
-	|SentenciaNamespace()|ExportarDLL() | ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
+	|SentenciaNamespace()| ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
 }
-void Librerias():
+void DirectivaReferencia():
 {}
 {
-	<DirectivasDePreprocesador> <Id> <AccesoAElementos> <Id>
+	<DirectivasDePreprocesador> <Id> LibreriaOImportarDLL()
+}
+
+void LibreriaOImportarDLL():
+{}
+{
+	( <AccesoAElementos> <Id> | <Parentesis> <Dllexport> <Rango> (Sentencia())+ <FinDeLinea>)
 }
 
 void Clase():
@@ -234,12 +240,12 @@ void Encabezado():
 void IngresarParametros():
 {}
 {
-	( ( <Id> ( AccesoAElementoArreglo() | InvocacionFuncion())? <Coma> )* <Id> (AccesoAElementoArreglo() | InvocacionFuncion())? )?
+	<Id> (AccesoAElementoArreglo() | InvocacionFuncion())? (<Id> ( AccesoAElementoArreglo() | InvocacionFuncion())? <Coma> )*
 }
 void Parametros():
 {}
 {
-	( ( VariableParametro() <Coma> )* VariableParametro() )?
+	(  VariableParametro() (<Coma> VariableParametro())* )?
 }
 
 void VariableParametro():
@@ -330,7 +336,9 @@ void ExpresionAritmetica():
 	(<Parentesis> ExpresionAritmetica() <Parentesis>  
 	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
 	|(<Id>(FuncionOArreglo()|(<OperadorAritmeticoUnario>)?)|<Number>)) (ParteDerExpAritmetica())?
+
 }
+
 void ExpresionBooleana():
 {}
 {
@@ -588,7 +596,7 @@ void AccesoEnumeracion():
 void ComentarioMultilinea():
 {}
 {
-	<Comentario> ( <Id> )+ <Comentario>
+	<Comentario> (<Id>)+<Comentario>
 }
 
 //Namespace
@@ -611,13 +619,7 @@ void SentenciaUsing ():
 	<Using> <EspacioDeNombre> <Id>
 }
 
-//Importacion y Exportacion de Dllexport
-void ExportarDLL():
-{}
-{
-	<DirectivasDePreprocesador> <Id> <Parentesis> <Dllexport> <Rango> (Sentencia())+ <FinDeLinea>
-}
-
+//Importacion de Dllexport
 void ImportarDLL():
 {}
 {
