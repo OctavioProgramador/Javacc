@@ -512,10 +512,11 @@ void InicializacionArreglo():
 	Arreglo() <Asignacion> <Id>
 }
 
+//No se puede asignar un arreglo vacio a una variable de tipo arreglo
 void Arreglo():
 {}
 {
-	<Llaves> (Vector() (<Rango> Vector())*)? <Llaves>
+	<Llaves> Vector() (<Rango> Vector())* <Llaves>
 }
 
 void Vector():
@@ -664,7 +665,14 @@ void ConversionReinterpretarODecVar():
 void SentenciasId():
 {}
 {
-	<Id> (  Conversion() | <OperadorAritmeticoUnario> (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? | ( FuncionOArreglo() | AccesoEnumeracion() ) (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
+	<Id> (  Conversion() | <OperadorAritmeticoUnario> (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? | ( FuncionOArreglo2() | AccesoEnumeracion() ) (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
 }
+
+void FuncionOArreglo2():
+{}
+{
+	(AccesoAElementoArreglo() | InvocacionFuncion())
+}
+
 
 // F I N
