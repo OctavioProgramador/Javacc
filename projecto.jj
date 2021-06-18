@@ -173,7 +173,9 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	( Librerias() )* ( Clase() | Funcion() | DeclaracionEstructura )* FuncionMain()
+	( Librerias() | ComentarioMultilinea)* ( Clase() | Funcion() | DeclaracionEstructura() 
+	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
+	|SentenciaNamespace()|ExportarDLL() | ImportarDLL())* FuncionMain() (ComentarioMultilinea)?
 }
 void Librerias():
 {
@@ -183,7 +185,7 @@ void Librerias():
 void Clase():
 {}
 {
-	<DeclaracionDeClase> <Id> <Rango> (BloqueModificadorAcceso() | Constructor())+ <FinDeLinea>
+	<DeclaracionDeClase> <Id> (<Extends> <Id>)? <Rango> (BloqueModificadorAcceso() | Constructor())+ <FinDeLinea>
 }
 void BloqueModificadorAcceso():
 {
@@ -192,7 +194,7 @@ void BloqueModificadorAcceso():
 void FuncionODeclaracion():
 {}
 {
-	<TipoDeDato> ( <ModificadorDeAcceso> <Id> | <Id> ( FuncionSinNombreNiTipo() )? ) <FinDeLinea>
+	<TipoDeDato> ( <ModificadorDeAcceso> <Id> | <Id> (FuncionSinNombreNiTipo())? ) <FinDeLinea>
 }
 void FuncionSinNombreNiTipo():
 {}
@@ -201,17 +203,17 @@ void FuncionSinNombreNiTipo():
 }
 void Constructor():
 {
-	Encabezado() <Rango> ( Sentencia() )* <FinDeLinea>
+	Encabezado() <Rango> ( Sentencia() | ReferenciaSuperclaseAtributo())* <FinDeLinea>
 }
 void DeclaracionEstructura():
 {}
 {
-	<Estructura> <Id> <Rango> ( DeclaracionVariable() )+ <FinDeLinea>
+	<Estructura> <Id> <Rango> (DeclaracionVariable())+ <FinDeLinea>
 }
 void InstanciaObjeto():
 {}
 {
-	ModificadorDeclaracionMiembro (<Id> | <ClasesPredefinidas>) ( IngresarParametros())
+	<ModificadorDeclaracionMiembro> (<Id> | <ClasesPredefinidas>) <Parentesis> ( IngresarParametros()) <Parentesis>
 }
 // Funciones
 void Encabezado():
@@ -246,7 +248,12 @@ void DeclaracionVariable():
 void Sentencia():
 {}
 {
-	( DeclaracionVariable() | SentenciaAsignacion() | Ciclo() | Condicional() | Metodo() | SalidaEnPantalla() | DeclaracionArreglo()) <FinDeLinea>
+	(ComentarioMultilinea())?( DeclaracionVariable() | SentenciaAsignacion() | Ciclo() 
+	| Condicional() | InvocarMetodo() | SalidaEnPantalla() | DeclaracionArreglo() 
+	| SentenciaAritmeticaUnaria() | VariableNoLocal() | InstanciaObjeto() 
+	| InicializacionArreglo() | DeclaracionTryCatch() | ExpresionLetIn() 
+	| ReferenciaNamespace() RenombreDeTipo() | Conversion() | Lectura() 
+	| ConversionReinterpretar()) <FinDeLinea>
 }
 
 void Metodo():
@@ -269,7 +276,7 @@ void Funcion():
 void FuncionMain():
 {}
 {
-	<Main> <Rango> Sentencia()* <FinDeLinea>
+	<Main> <Rango> (SentenciaUsing())* (Sentencia())* <FinDeLinea>
 }
 void InvocacionFuncion():
 {}
@@ -293,23 +300,25 @@ void ExpresionReturn():
 void ExpresionGeneral():
 {}
 {
-	(<Parentesis> ExpresionGeneral() <Parentesis>
+	(<Parentesis> ExpresionGeneral() <Parentesis> 
 	|<ValorBooleano> ParteDerExpBooleana()
-	|<Id> FuncionOArreglo()(ParteDerExpBooleana() |ParteDerExpAritmeticaOString() |ParteDerComparacion() )? 
-	|<Number> (ParteDerExpAritmetica()| ParteDerComparacion() )?
-	|CadenaString() (ParteDerExpString()) ?)
+	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
+	|<Id> (FuncionOArreglo()|(<OperacionAritmeticaUnaria>)?|AccesoEnumeracion()) (ParteDerExpBooleana()|ParteDerExpAritmeticaOString()|ParteDerComparacion())? 
+	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
+	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
 }
 void ExpresionAritmetica():
 {}
 {
-	(<Parentesis> ExpresionAritmetica() <Parentesis> 
-	|(<Id> FuncionOArreglo()| <Number>) ParteDerExpAritmetica?)
+	(<Parentesis> ExpresionAritmetica() <Parentesis>  
+	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
+	|(<Id>(FuncionOArreglo()|(OperacionAritmeticaUnaria())?)|<Number>)) (ParteDerExpAritmetica())?
 }
 void ExpresionBooleana():
 {}
 {
 	(<Parentesis> ExpresionBooleana() <Parentesis> 
-	|<Id> FuncionOArreglo()(ParteDerExpBooleana() | ParteDerComparacion() )?
+	|<Id> FuncionOArreglo()(ParteDerExpBooleana()|ParteDerComparacion())?
 	|<ValorBooleano> (ParteDerExpBooleana())? )
 }
 void ExpresionString():
@@ -363,7 +372,7 @@ void SentenciaAritmeticaUnaria():
 	<Id> <OperacionAritmeticaUnaria>
 }
 
-void DelcaracionVariableGlobal():
+void DeclaracionVariableGlobal():
 {}
 {
 	<Global> <Id> (<Rango> ExpresionAritmetica() <Rango> ) ? <FinDeLinea>
@@ -372,13 +381,13 @@ void DelcaracionVariableGlobal():
 void Ciclo():
 {}
 {
-	<Ciclos> ( CicloWhile() | CicloFor() | CicloForeach() | CicloWhile() )
+	( CicloWhile() | CicloFor() | CicloForeach() | CicloDoWhile() )
 }
 
 void CicloFor():
 {}
 {
-	<for> RangoNumerico() <Rango> (Sentencia()+) <FinDeLinea>  
+	<Ciclos> RangoNumerico() <Rango> (Sentencia()+) <FinDeLinea>  
 }
 
 void RangoNumerico():
@@ -389,19 +398,19 @@ void RangoNumerico():
 void CicloForeach():
 {}
 {
-	<TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
+	<Ciclos> <TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
 }
 
 void CicloWhile():
 {}
 {
-	ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
+	<Ciclos> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
 }
 
 void CicloDoWhile():
 {}
 {
-	<Llaves> ExpresionBooleana <Llaves> <Rango> (Sentencia())+ <FinDeLinea>
+	<Ciclos> <Rango> (Sentencia())+ <FinDeLinea> <Ciclos> <Llaves> ExpresionBooleana <Llaves> 
 }
 
 //Condicionales//
@@ -627,5 +636,10 @@ void Lectura():
 {}
 {
 	<Read> <Id>
+}
+void ConversionReinterpretar():
+{}
+{
+	<TipoDeDato> <Id> <Asignacion> <reinterpret_cast> <Parentesis> <Id> <Parentesis> <FinDeLinea>
 }
 
