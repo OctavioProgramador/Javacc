@@ -65,7 +65,11 @@ TOKEN : {<DeclaracionEnumeracion: "enum">{System.out.println("DeclaracionEnumera
 TOKEN : {<DeclaracionDeEvento: "event">{System.out.println("DeclaracionDeEvento");}} //38
 TOKEN : {<OperacionesDeConversion: "explicit"|"implicit"|"operator">{System.out.println("OperacionesDeConversion("+image+")");}} // 39
 TOKEN : {<ValorBooleano: "true"|"false">{System.out.println("ValorBooleano("+image+")");}} // 40
-TOKEN : {<Ciclos: "do"|" while"|"for"|"foreach">{System.out.println("Ciclo("+image+")");}} // 41
+// TOKEN : {<Ciclos: "do"|" while"|"for"|"foreach">{System.out.println("Ciclo("+image+")");}} // 41
+TOKEN : {<For: "for">{System.out.println("For");}}
+TOKEN : {<Foreach: "foreach">{System.out.println("Foreach");}}
+TOKEN : {<While: "while">{System.out.println("While");}}
+TOKEN : {<Do: "do">{System.out.println("Do");}}
 TOKEN : {<ModificadorDeParametro: "in"|"out"|"params"|"ref" >{System.out.println("ModificadorDeParametro("+image+")");}} // 42
 TOKEN : {<ProductorDeGeneradores: "yield">{System.out.println("ProductorDeGeneradores");}} // 43
 TOKEN : {<Using: "using">{System.out.println("SentenciaUsing");}} // 44
@@ -175,7 +179,7 @@ void Programa():
 {
 	( Librerias() | ComentarioMultilinea)* ( Clase() | Funcion() | DeclaracionEstructura() 
 	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
-	|SentenciaNamespace()|ExportarDLL() | ImportarDLL())* FuncionMain() (ComentarioMultilinea)?
+	|SentenciaNamespace()|ExportarDLL() | ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
 }
 void Librerias():
 {
@@ -248,12 +252,11 @@ void DeclaracionVariable():
 void Sentencia():
 {}
 {
-	(ComentarioMultilinea())?( DeclaracionVariable() | SentenciaAsignacion() | Ciclo() 
-	| Condicional() | InvocarMetodo() | SalidaEnPantalla() | DeclaracionArreglo() 
-	| SentenciaAritmeticaUnaria() | VariableNoLocal() | InstanciaObjeto() 
+	(ComentarioMultilinea())?( ConversionReinterpretarODecVar() | SentenciaAsignacion() | Ciclo() 
+	| Condicional() | SalidaEnPantalla() | DeclaracionArreglo() 
+	| SentenciasId() | VariableNoLocal() | InstanciaObjeto() 
 	| InicializacionArreglo() | DeclaracionTryCatch() | ExpresionLetIn() 
-	| ReferenciaNamespace() RenombreDeTipo() | Conversion() | Lectura() 
-	| ConversionReinterpretar()) <FinDeLinea>
+	| ReferenciaNamespace() RenombreDeTipo() | Lectura() ) <FinDeLinea>
 }
 
 void Metodo():
@@ -307,6 +310,14 @@ void ExpresionGeneral():
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
 	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
 }
+void ExpresionGeneralSinId():
+{}
+{
+	(<Parentesis> ExpresionGeneral() <Parentesis> 
+	|<ValorBooleano> ParteDerExpBooleana()
+	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
+	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
+	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
 void ExpresionAritmetica():
 {}
 {
@@ -363,13 +374,7 @@ void FuncionOArreglo():
 void SentenciaAsignacion():
 {}
 {
-	ExpresionGeneral() <OperadorRelacional> <Id> <FinDeLinea>
-}
-
-void SentenciaAritmeticaUnaria():
-{}
-{
-	<Id> <OperacionAritmeticaUnaria>
+	ExpresionGeneralSinId() <OperadorRelacional> <Id> 
 }
 
 void DeclaracionVariableGlobal():
@@ -387,7 +392,7 @@ void Ciclo():
 void CicloFor():
 {}
 {
-	<Ciclos> RangoNumerico() <Rango> (Sentencia()+) <FinDeLinea>  
+	<For> RangoNumerico() <Rango> (Sentencia()+) <FinDeLinea>  
 }
 
 void RangoNumerico():
@@ -398,19 +403,19 @@ void RangoNumerico():
 void CicloForeach():
 {}
 {
-	<Ciclos> <TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
+	<Foreach> <TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
 }
 
 void CicloWhile():
 {}
 {
-	<Ciclos> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
+	<While> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
 }
 
 void CicloDoWhile():
 {}
 {
-	<Ciclos> <Rango> (Sentencia())+ <FinDeLinea> <Ciclos> <Llaves> ExpresionBooleana <Llaves> 
+	<Do> <Rango> (Sentencia())+ <FinDeLinea> <While> <Llaves> ExpresionBooleana <Llaves> 
 }
 
 //Condicionales//
@@ -423,7 +428,7 @@ void Condicional()
 void CondicionIf()
 {}
 {
-	<SentenciaIF> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea> (<Elif> ExpresionBooleana() (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
+	<SentenciaIF> (ExpresionBooleana() |ComprobacionDeTipoOClase())<Rango> (Sentencia())+ <FinDeLinea> (<Elif> (ExpresionBooleana() | ComprobacionDeTipoOClase()) (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
 }
 
 void CondicionCase()
@@ -435,19 +440,13 @@ void CondicionCase()
 void SalidaEnPantalla()
 {}
 {
-	<Print> ExpresionGeneral() <FinDeLinea>
-}
-
-void ReferenciaSuperclase()
-{}
-{
-	<DeclaracionDeClase> <Id> <Extends> <Id> <Rango>
+	<Print> ExpresionGeneral() 
 }
 
 void ReferenciaSuperclaseAtributo()
 {}
 {
-	<Super> <AccesoAElementos> <Id>
+	<Super> <AccesoAElementos> <Id> <FinDeLinea>
 }
 
 // Control de excepciones
@@ -562,7 +561,7 @@ void Enumeracion():
 void AccesoEnumeracion():
 {}
 {
-	<Id> <AccesoAElementos> <Id>
+	 <AccesoAElementos> <Id>
 }
 
 //Comentarios
@@ -620,7 +619,7 @@ void RenombreDeTipo():
 void Conversion():
 {}
 {
-	<Id> <ExpresionDeConversion> <TipoDeDato>
+	 <ExpresionDeConversion> <TipoDeDato>
 }
 void ComprobacionDeTipoOClase():
 {}
@@ -637,9 +636,16 @@ void Lectura():
 {
 	<Read> <Id>
 }
-void ConversionReinterpretar():
+void ConversionReinterpretarODecVar():	
 {}
 {
-	<TipoDeDato> <Id> <Asignacion> <reinterpret_cast> <Parentesis> <Id> <Parentesis> <FinDeLinea>
+	<TipoDeDato> ( <Id> (<Asignacion> <reinterpret_cast> <Parentesis> <Id> <Parentesis> )? | <ModificadorDeTipo> <Id> )
 }
 
+void SentenciasId():
+{}
+{
+	<Id> ( InvocacionFuncion() | Conversion() | <OperadorAritmeticoUnario> | (FuncionOArreglo | ( <OperadorAritmeticoUnario>)? | AccesoEnumeracion() ) (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
+}
+
+// F I N
