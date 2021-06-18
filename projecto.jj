@@ -376,7 +376,15 @@ void ParteDerExpString():
 void ParteDerExpAritmeticaOString():
 {}
 {
-	<OperadorAritmeticoBinario> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() [ ( ParteDerExpString() | ParteDerExpAritmetica() ) ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )
+	//<OperadorAritmeticoBinario> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() [ ( ParteDerExpString() | ParteDerExpAritmetica() ) ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )
+	<OperadorAritmeticoBinario> ( <Parentesis> ExpAritmeticaOString() <Parentesis> | ExpAritmeticaOString() )
+}
+
+// Se usa para reemplazar (ExpAritmetica|ExpString)
+void ExpAritmeticaOString():
+{}
+{
+	( <Id> FuncionOArreglo() [ ( ParteDerExpString() | ParteDerExpAritmetica() ) ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )  
 }
 
 void FuncionOArreglo():
