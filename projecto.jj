@@ -16,7 +16,7 @@ PARSER_END(lexico)
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
 /*Definiciones regulares*/
 TOKEN : { < #WORD : ((["a"-"z"]|["A"-"Z"]))+ > } 
-TOKEN : { < #SPECIAL : "_" | "@" | "." > }
+TOKEN : { < #SPECIAL : "_" | "@"   > }
 /*Componentes lexicos*/	
 TOKEN : { < Asignacion: "="> {System.out.println("Asignacion");}} //1
 TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >  //2
@@ -36,7 +36,8 @@ TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}} //13
 TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" > 
 	{System.out.println("DirectivasDePreprocesador ("+image+")");}} //14
-TOKEN : { < SentenciaIF : "if"|"else"> {System.out.println("SentenciaIf("+image+")");}} //15
+TOKEN : { < SentenciaIF : "if"> {System.out.println("SentenciaIf");}} //15
+TOKEN : { < Else: "else"> {System.out.println("else");}}
 TOKEN : { < FuncionesPredefinidasFuncionales : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all">{System.out.println("FuncionPredefinida ("+image+")");}} //16 Dividir mejor esta parte
 TOKEN : { < FuncionesPredefinidasIterativas : "count"|"range"|"cycle"|"repeat"|"chain"|"tee"|"islice"|"filterfalse"|"takewhile" > { System.out.println("FuncionesPredefinidasIterativas ("+image+")");}}
 TOKEN: {<ReferenciaApuntador: "&" | "this">{System.out.println("ReferenciaApuntador");}} //16
@@ -60,7 +61,7 @@ TOKEN : { <Case: "case" > {System.out.println("Case");}}// cambio hay que ver do
 TOKEN : { <Switch: "switch" > {System.out.println("Switch");}}// No pude hacer el case como lo planee
 TOKEN : { <CasoDefault: "default">{System.out.println("Default");}}
 TOKEN : { <ComprobacionDeDesbordamiento: "check "|"unchecked" >{System.out.println("ComprobacionDeDesbordamiento("+image+")");}} //34
-TOKEN : {<DeclaracionDeClase: "clase" >{System.out.println("DeclaracionDeClase");}} //35
+TOKEN : {<DeclaracionDeClase: "class" >{System.out.println("DeclaracionDeClase");}} //35
 TOKEN : {<ModificadorDeTipo: "const"|"signed"|"unsigned" >{System.out.println("ModificadorDeTipo("+image+")");}} //36
 TOKEN : {<DeclaracionEnumeracion: "enum">{System.out.println("DeclaracionEnumeracion");}} //37
 //TOKEN : {<DeclaracionDeEvento: "event">{System.out.println("DeclaracionDeEvento");}} //38
@@ -122,7 +123,7 @@ TOKEN : { < DeclaracionTry : "try" > {System.out.println("Declaracion Try");}}
 TOKEN : { < DeclaracionCatch : "catch" > {System.out.println("Declaracion Catch");}}
 /*Identificador*/
 TOKEN: {<Main: "main">{System.out.println("Main");}}
-TOKEN : { < Id : (<WORD>)+(<Number>|<Number>|<SPECIAL>)* >}
+TOKEN : { < Id : (<WORD>)+(<Number>|<Number>|<SPECIAL>)* >{System.out.println(image);}}
 
 void Start(PrintStream printStream) throws NumberFormatException:
 {
@@ -179,7 +180,7 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	(DirectivaReferencia())* ( Clase() | Funcion() | DeclaracionEstructura() 
+	(DirectivaReferencia())* ( Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
 	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
 	|SentenciaNamespace()| ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
 }
@@ -208,12 +209,12 @@ void BloqueModificadorAcceso():
 void FuncionODeclaracion():
 {}
 {
-	<TipoDeDato> ( <ModificadorDeAcceso> <Id> | <Id> (FuncionSinNombreNiTipo())? ) <FinDeLinea>
+	<TipoDeDato> ( <ModificadorDeTipo> <Id> <FinDeLinea>| <Id> (FuncionSinNombreNiTipo()|<FinDeLinea>)) 
 }
 void FuncionSinNombreNiTipo():
 {}
 {
-	Parametros() <Rango> ( Sentencia() )* ExpresionReturn() 
+	Parametros() <Rango> ( Sentencia() )* ExpresionReturn() <FinDeLinea> 
 }
 void Constructor():
 {}
@@ -223,7 +224,7 @@ void Constructor():
 void DeclaracionEstructura():
 {}
 {
-	<Estructura> <Id> <Rango> (DeclaracionVariable())+ <FinDeLinea>
+	<Estructura> <Id> <Rango> (DeclaracionVariable() <FinDeLinea>)+ <FinDeLinea>
 }
 void InstanciaObjeto():
 {}
@@ -240,7 +241,7 @@ void Encabezado():
 void IngresarParametros():
 {}
 {
-	<Id> FuncionOArreglo() (<Id> FuncionOArreglo() <Coma> )*
+	<Id> FuncionOArreglo() (<Coma> <Id> FuncionOArreglo())*
 }
 void Parametros():
 {}
@@ -257,13 +258,13 @@ void VariableParametro():
 void DeclaracionVariable():
 {}
 {
-	<TipoDeDato> ( <ModificadorDeTipo> )? <Id> <FinDeLinea>
+	<TipoDeDato> ( <ModificadorDeTipo> )? <Id> 
 }
 
 void Sentencia():
 {}
 {
-	(ComentarioMultilinea())?( ConversionReinterpretarODecVar() | SentenciaAsignacion() | Ciclo() 
+	(ComentarioMultilinea()| ConversionReinterpretarODecVar() | SentenciaAsignacion() | Ciclo() 
 	| Condicional() | SalidaEnPantalla() | DeclaracionArreglo() 
 	| SentenciasId() | VariableNoLocal() | InstanciaObjeto() 
 	| InicializacionArreglo() | DeclaracionTryCatch() | ExpresionLetIn() 
@@ -309,26 +310,58 @@ void CadenaString():
 void ExpresionReturn():
 {}
 {
-	<Return> ExpresionGeneral()
+	<Return> ExpresionGeneral() <FinDeLinea>
 }
 void ExpresionGeneral():
 {}
 {
-	(<Parentesis> ExpresionGeneral() <Parentesis> 
+	/*(<Parentesis> ExpresionGeneral() <Parentesis> 
 	|<ValorBooleano> ParteDerExpBooleana()
 	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
 	|<Id> (FuncionOArreglo2()|<OperadorAritmeticoUnario>|AccesoEnumeracion())? (ParteDerExpBooleana()|ParteDerExpAritmeticaOString()|ParteDerComparacion())? 
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
 	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
+	*/
+	(<Parentesis> ExpresionGeneral() <Parentesis> |<ValorBooleano> ParteDerExpBooleana()
+	|ParteFuncionMatematicaExpresionGeneral() |ParteIdExpresionGeneral() |ParteNumeroExpresionGeneral()
+	|CadenaString() ParteDerExpString()|ObtenerTamanoDeTipo())
+}
+void ParteIdExpresionGeneral():
+{}
+{
+	<Id> (ParteIdExpresionGeneralDer() (ParteIdExpresionGeneralIzq())? | ParteIdExpresionGeneralIzq())?
+}
+
+void ParteIdExpresionGeneralDer():
+{}
+{
+	(FuncionOArreglo2()|<OperadorAritmeticoUnario>|AccesoEnumeracion())
+}
+
+void ParteIdExpresionGeneralIzq():
+{}
+{
+	(ParteDerExpBooleana()|ParteDerExpAritmeticaOString()|ParteDerComparacion())
+}
+
+void ParteNumeroExpresionGeneral():
+{}
+{
+	<Number> (ParteDerExpAritmetica()|ParteDerComparacion())?
+}
+void ParteFuncionMatematicaExpresionGeneral():
+{}
+{
+	<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis>  
 }
 void ExpresionGeneralSinId():
 {}
 {
 	(<Parentesis> ExpresionGeneral() <Parentesis> 
-	|<ValorBooleano> ParteDerExpBooleana()
+	|<ValorBooleano> ( ParteDerExpBooleana() )?
 	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
-	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
+	| CadenaString() ( ParteDerExpString())? | ObtenerTamanoDeTipo())
 }
 void ExpresionAritmetica():
 {}
@@ -343,7 +376,7 @@ void ExpresionBooleana():
 {}
 {
 	(<Parentesis> ExpresionBooleana() <Parentesis> 
-	|<Id> FuncionOArreglo()(ParteDerExpBooleana()|ParteDerComparacion())?
+	|<Id> ((FuncionOArreglo2())?(ParteDerExpBooleana()|ParteDerComparacion())? | ComprobacionDeTipoOClase())
 	|<ValorBooleano> (ParteDerExpBooleana())? )
 }
 void ExpresionString():
@@ -450,7 +483,7 @@ void Condicional():
 void CondicionIf():
 {}
 {
-	<SentenciaIF> (ExpresionBooleana() |ComprobacionDeTipoOClase())<Rango> (Sentencia())+ <FinDeLinea> (<Elif> (ExpresionBooleana() | ComprobacionDeTipoOClase()) (Sentencia())+ <FinDeLinea>)* (<SentenciaIF> (Sentencia())+ <FinDeLinea>)?
+	<SentenciaIF> ExpresionBooleana() <Rango> (Sentencia())+ ( <Elif> ExpresionBooleana() <Rango> (Sentencia())+ )* (<Else> (Sentencia())+ )?
 }
 
 void CondicionCase():
@@ -557,19 +590,25 @@ void ExpresionFuncional():
 void CuerpoExpresionFuncional():
 {}
 {
-	( Lista() | <Id> ( <Llaves> (<Id> ( <Coma> <Id>)* )?<Llaves>)? (ParteDerExpFun())? | <FuncionesPredefinidasFuncionales> <Llaves> ExpresionFuncional() <Llaves> (ParteDerExpFun())? )
+	( Lista() | <Id> ( <Llaves> (<Id> ( <Coma> <Id>)* )?<Llaves>)? (ParteDerExpFun())? | ( <FuncionesPredefinidasFuncionales> <Llaves> ExpresionFuncional() <Llaves> (ParteDerExpFun())? | ForeachFuncional() ))
 }
 
 void ParteDerExpFun():
 {}
 {
-	<OperadorAritmeticoBinario> ExpresionFuncional()
+	<OperadorAritmeticoBinario> CuerpoExpresionFuncional()
+}
+
+void ForeachFuncional():
+{}
+{
+	<Foreach> <Llaves> <Id> <In> CuerpoExpresionFuncional() <Llaves>
 }
 
 void Lista():
 {}
 {
-	<Llaves> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Llaves>
+	<Corchete> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Corchete>
 }
 
 //Expresion let in
@@ -654,7 +693,7 @@ void Conversion():
 void ComprobacionDeTipoOClase():
 {}
 {
-	<Id> <Instanceof> (<Id> | <Estructura> | <TipoDeDato>)
+	<Instanceof> (<Id> | <Estructura> | <TipoDeDato>)
 }
 void VariableNoLocal():
 {}
