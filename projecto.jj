@@ -179,7 +179,7 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	(DirectivaReferencia()| ComentarioMultilinea())* ( Clase() | Funcion() | DeclaracionEstructura() 
+	(DirectivaReferencia())* ( Clase() | Funcion() | DeclaracionEstructura() 
 	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
 	|SentenciaNamespace()| ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
 }
@@ -240,7 +240,7 @@ void Encabezado():
 void IngresarParametros():
 {}
 {
-	<Id> (AccesoAElementoArreglo() | InvocacionFuncion())? (<Id> ( AccesoAElementoArreglo() | InvocacionFuncion())? <Coma> )*
+	<Id> FuncionOArreglo() (<Id> FuncionOArreglo() <Coma> )*
 }
 void Parametros():
 {}
@@ -317,7 +317,7 @@ void ExpresionGeneral():
 	(<Parentesis> ExpresionGeneral() <Parentesis> 
 	|<ValorBooleano> ParteDerExpBooleana()
 	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
-	|<Id> (FuncionOArreglo()|(<OperadorAritmeticoUnario>)?|AccesoEnumeracion()) (ParteDerExpBooleana()|ParteDerExpAritmeticaOString()|ParteDerComparacion())? 
+	|<Id> (FuncionOArreglo2()|<OperadorAritmeticoUnario>|AccesoEnumeracion())? (ParteDerExpBooleana()|ParteDerExpAritmeticaOString()|ParteDerComparacion())? 
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
 	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
 }
@@ -335,7 +335,7 @@ void ExpresionAritmetica():
 {
 	(<Parentesis> ExpresionAritmetica() <Parentesis>  
 	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
-	|(<Id>(FuncionOArreglo()|(<OperadorAritmeticoUnario>)?)|<Number>)) (ParteDerExpAritmetica())?
+	|(<Id>(FuncionOArreglo2()|(<OperadorAritmeticoUnario>)?)|<Number>)) (ParteDerExpAritmetica())?
 
 }
 
@@ -384,7 +384,7 @@ void ParteDerExpAritmeticaOString():
 void ExpAritmeticaOString():
 {}
 {
-	( <Id> FuncionOArreglo() [ ( ParteDerExpString() | ParteDerExpAritmetica() ) ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )  
+	( <Id> FuncionOArreglo() [ ParteDerExpAritmeticaOString() ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )  
 }
 
 void FuncionOArreglo():
@@ -513,13 +513,13 @@ void DeclaracionArreglo():
 void SentenciaCorchetes():
 {}
 {
-	<Corchete> <Corchete> (<Corchete> <Corchete>)?
+	<Corchete> <Corchete> (<Coma> <Corchete> <Corchete>)*
 }
 
 void AccesoAElementoArreglo():
 {}
 {
-	<Corchete> ExpresionAritmetica() <Corchete> (<Corchete> ExpresionAritmetica() <Corchete>)?
+	<Corchete> ExpresionAritmetica() <Corchete> (<Coma> <Corchete> ExpresionAritmetica() <Corchete>)*
 }
 
 void InicializacionArreglo():
