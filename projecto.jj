@@ -34,8 +34,9 @@ TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("Referencia
 TOKEN : { < Number : (["0"-"9"])+ >{System.out.println("Numero");}  }
 TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
 TOKEN : { < Rango : ":" > {System.out.println("Rango");}} //13
-TOKEN : { < DirectivasDePreprocesador : "#include"|"#define"|"#endif" > 
+TOKEN : { < DirectivasDePreprocesador : "#include"|"#endif" > 
 	{System.out.println("DirectivasDePreprocesador ("+image+")");}} //14
+TOKEN : { < DirectivaDefine : "#define" > {System.out.println("#define");}}
 TOKEN : { < SentenciaIF : "if"> {System.out.println("SentenciaIf");}} //15
 TOKEN : { < Else: "else"> {System.out.println("else");}}
 TOKEN : { < FuncionesPredefinidasFuncionales : "how"|"map"|"zip"|"filter"|"foldr"|"foldl"|"lenght"|"head"|"fst"|"snd"|"tail"|"id"|"show"|"iter"|"next"|"list"|"tuple"|"max"|"min"|"values"|"dict"|"sum"|"sorted"|"any"|"all">{System.out.println("FuncionPredefinida ("+image+")");}} //16 Dividir mejor esta parte
@@ -180,20 +181,20 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	(DirectivaReferencia())* ( Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
+	(ComentarioMultilinea())* (DirectivaReferencia())* (ExportarDll() | Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
 	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
 	|SentenciaNamespace()| ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
 }
 void DirectivaReferencia():
 {}
 {
-	<DirectivasDePreprocesador> <Id> LibreriaOImportarDLL()
+	<DirectivasDePreprocesador> <Id> <AccesoAElementos> <Id> 
 }
 
-void LibreriaOImportarDLL():
+void ExportarDll():
 {}
 {
-	( <AccesoAElementos> <Id> | <Parentesis> <Dllexport> <Rango> (Sentencia())+ <FinDeLinea>)
+	<DirectivaDefine> <Id> <Parentesis> <Dllexport> <Parentesis> <Rango> (Sentencia())+ <FinDeLinea>
 }
 
 void Clase():
@@ -264,11 +265,11 @@ void DeclaracionVariable():
 void Sentencia():
 {}
 {
-	(ComentarioMultilinea()| ConversionReinterpretarODecVar() | SentenciaAsignacion() | Ciclo() 
+	( (ConversionReinterpretarODecVar() | SentenciaAsignacion() | Ciclo() 
 	| Condicional() | SalidaEnPantalla() | DeclaracionArreglo() 
 	| SentenciasId() | VariableNoLocal() | InstanciaObjeto() 
 	| InicializacionArreglo() | DeclaracionTryCatch() | ExpresionLetIn() 
-	| ReferenciaNamespace() RenombreDeTipo() | Lectura() ) <FinDeLinea>
+	| ReferenciaNamespace()| RenombreDeTipo() | Lectura() ) <FinDeLinea> | ComentarioMultilinea())
 }
 
 void Metodo():
@@ -453,7 +454,7 @@ void CicloFor():
 void RangoNumerico():
 {}
 {
-	<Corchete> <Number> <Rango> <Number> <Corchete>
+	<Corchete> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Corchete>
 }
 void CicloForeach():
 {}
@@ -714,7 +715,7 @@ void ConversionReinterpretarODecVar():
 void SentenciasId():
 {}
 {
-	<Id> (  Conversion() | <OperadorAritmeticoUnario> (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? | ( FuncionOArreglo2() | AccesoEnumeracion() ) (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
+	<Id> (  Conversion() | <OperadorAritmeticoUnario> (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? | ( FuncionOArreglo2() | AccesoEnumeracion() )? (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
 }
 
 void FuncionOArreglo2():
