@@ -332,7 +332,7 @@ void FuncionMain():
 void InvocacionFuncion():
 {}
 {
-	<ParentesisIzq> IngresarParametros() <ParentesisDer>
+	<ParentesisIzq> (IngresarParametros())? <ParentesisDer>
 }
 
 //Cadenas//
@@ -462,7 +462,9 @@ void ExpAritmeticaOString():
 void FuncionOArreglo2():
 {}
 {
-	(AccesoAElementoArreglo() | InvocacionFuncion())
+	//(AccesoAElementoArreglo() | InvocacionFuncion())
+	//AccesoAElementoArreglo()
+	InvocacionFuncion()
 }
 /*void FuncionOArreglo():
 {}
@@ -596,7 +598,7 @@ void SentenciaCorchetes():
 void AccesoAElementoArreglo():
 {}
 {
-	<CorcheteIzq> ExpresionAritmetica() <CorcheteDer> <CorcheteIzq> ExpresionAritmetica() <CorcheteDer>
+	<CorcheteIzq> ExpresionAritmetica() <CorcheteDer> (<CorcheteIzq> ExpresionAritmetica() <CorcheteDer>)*
 }
 
 void InicializacionArreglo():
