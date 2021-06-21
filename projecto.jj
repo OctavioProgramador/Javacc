@@ -9,27 +9,35 @@ PARSER_BEGIN(lexico)
 		public static void main (String [] args)
 		throws ParseException, TokenMgrError{
 			lexico parser = new lexico( System.in);
-			parser.Start(System.out); }
+			parser.Start(System.out);
+		 }
 	}
 PARSER_END(lexico)
 
+//Espacios en blanco
 SKIP : { "\t"| "\r" | "\r\n" | "\n" | " "}
+//Comentarios
+SKIP : { < Comentario: ( "/*" (~[])* "*/" ) | ( "//"( ~["\n"])*"\n") > } 
 /*Definiciones regulares*/
 TOKEN : { < #WORD : ((["a"-"z"]|["A"-"Z"]))+ > } 
 TOKEN : { < #SPECIAL : "_" | "@"   > }
 /*Componentes lexicos*/	
 TOKEN : { < Asignacion: "="> {System.out.println("Asignacion");}} //1
 TOKEN : { < OperadorRelacional: "==" | "!="  | ">"  | "<"  | "=>" |  "<=" >  //2
-	{System.out.println("OperadorRelacional ("+image+")");}} TOKEN : { < Parentesis: "(" | ")">{System.out.println("Parentesis ("+image+")");}} //3 
-TOKEN : { < Corchete: "["  | "]">{System.out.println("Corchete ("+image+")");}} //4 
-TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}} //5
+	{System.out.println("OperadorRelacional ("+image+")");}} 
+TOKEN : { < ParentesisIzq: "(" >{System.out.println("Parentesis izquierdo");}} //3 
+TOKEN : { < ParentesisDer:  ")" > {System.out.println("Parentesis derecho");}} //3 
+TOKEN : { < CorcheteIzq : "[" >{System.out.println("Corchete Izquierdo");}} //4 
+TOKEN : { < CorcheteDer : "]" >{System.out.println("Corchete Derecho");}}
+//TOKEN : { < Comentario: "/*" | "*/" |  "//"> {System.out.println("Comentario ("+image+")");}} //5
 TOKEN : { < OperadorAritmeticoUnario: "++" | "--" > {System.out.println("OperadorAritmeticoUnario ("+image+")");}} //6
 TOKEN : { < OperadorAritmeticoBinario :  "+" | "-" | "*" | "/" | "*=" | "+=" | "-=" | "/=" >  
 	{System.out.println("OperadorAritmeticoBinario ("+image+")");}} //7
 TOKEN : { < FuncionMatematica : "sqrt" | "abs"> {System.out.println("FuncionMatematica ("+image+")");}} //8
 TOKEN : { < OperadoresLogicos : "&&" | "||" | "XOR" > 
 	{System.out.println("OperadoresLogicos ("+image+")");}} //9
-TOKEN : { < Llaves : "{" | "}" > {System.out.println("Llaves ("+image+")");}} //10
+TOKEN : { < LlaveIzq : "{" > {System.out.println("Llave izquierda");}} //10
+TOKEN : { < LlaveDer : "}" > {System.out.println("Llave derecha");}} //10
 TOKEN : { < ReferenciasPunteros : "this" | "&" > {System.out.println("ReferenciasPunteros ("+image+")");}} //11
 TOKEN : { < Number : (["0"-"9"])+ >{System.out.println("Numero");}  }
 TOKEN : { < Coma : "," > {System.out.println("Coma");}} //12
@@ -46,6 +54,7 @@ TOKEN: {<TipoDeDato: "int" | "char" | "string" | "bool" | "decimal" | "void" | "
 TOKEN: {<AccesoAElementos: "." | "->">{System.out.println("AccesoAElementos -> " + image);}} //18
 TOKEN: {<FinDeLinea: ";">{System.out.println("FinDeLinea");} } //19
 TOKEN: {<Comillas: "\""| "\'">{System.out.println("Comillas");}} //20
+TOKEN : { < String: "\"" (~["\""])* "\""  >{System.out.println("String ("+image+")");}}
 TOKEN : {<Return: "return">{System.out.println("return");}} //22
 TOKEN : {<Of: "of">{System.out.println("OfExpresionCase");}} //23
 TOKEN : {<Let: "let" >{System.out.println("in");}} //24
@@ -124,13 +133,38 @@ TOKEN : { < DeclaracionTry : "try" > {System.out.println("Declaracion Try");}}
 TOKEN : { < DeclaracionCatch : "catch" > {System.out.println("Declaracion Catch");}}
 /*Identificador*/
 TOKEN: {<Main: "main">{System.out.println("Main");}}
-TOKEN : { < Id : (<WORD>)+(<Number>|<Number>|<SPECIAL>)* >{System.out.println(image);}}
+TOKEN : { < Id : (<WORD>)+(<Number>|<Number>|<SPECIAL>)* >{
+	//Logica del diccionario de identificadores
+	palabra = image.toString();
+	i = 0;
+	for (; i < tabla.size(); i++)
+	{
+		if(palabra.equals(tabla.get(i)))
+		{
+			break;
+		}
+	}
+	if(tabla.size() == i){
+		tabla.add(palabra);
+	}
+	System.out.println("Identificador ("+Integer.toString(i)+")");
+}}
+
+TOKEN_MGR_DECLS : {
+	//Variables del diccionario de indentificadores
+	public String palabra = "";
+	public ArrayList<String> tabla = new ArrayList<String>();
+	public	int i = 0;
+}
+
 
 void Start(PrintStream printStream) throws NumberFormatException:
 {
+	/*
 	Token t;
 	ArrayList<String> tabla;
 	tabla = new ArrayList<String>();
+	*/
 }
 {
 	/*
@@ -181,9 +215,9 @@ void Start(PrintStream printStream) throws NumberFormatException:
 void Programa():
 {}
 {
-	(ComentarioMultilinea())* (DirectivaReferencia())* (ExportarDll() | Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
-	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal() | ComentarioMultilinea() 
-	|SentenciaNamespace()| ImportarDLL())* FuncionMain() (ComentarioMultilinea())?
+	/*(ComentarioMultilinea())**/ (DirectivaReferencia())* (ExportarDll() | Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
+	|ExpresionFuncional() | Enumeracion() | DeclaracionVariableGlobal()/* | ComentarioMultilinea() */
+	|SentenciaNamespace()| ImportarDLL())* FuncionMain() /*(ComentarioMultilinea())?*/
 }
 void DirectivaReferencia():
 {}
@@ -194,7 +228,8 @@ void DirectivaReferencia():
 void ExportarDll():
 {}
 {
-	<DirectivaDefine> <Id> <Parentesis> <Dllexport> <Parentesis> <Rango> (Sentencia())+ <FinDeLinea>
+	<DirectivaDefine> <Id> <ParentesisIzq> <Dllexport> <ParentesisDer> <Rango> (Sentencia())+ ExpresionReturn()  <FinDeLinea>
+
 }
 
 void Clase():
@@ -205,7 +240,7 @@ void Clase():
 void BloqueModificadorAcceso():
 {}
 {
-	<ModificadorDeAcceso> <Llaves> ( FuncionODeclaracion() | Metodo() )+ <Llaves>
+	<ModificadorDeAcceso> <LlaveIzq> ( FuncionODeclaracion() | Metodo() )+ <LlaveDer>
 }
 void FuncionODeclaracion():
 {}
@@ -230,7 +265,7 @@ void DeclaracionEstructura():
 void InstanciaObjeto():
 {}
 {
-	<ModificadorDeclaracionMiembro> (<Id> | <ClasesPredefinidas>) <Parentesis> ( IngresarParametros()) <Parentesis>
+	<ModificadorDeclaracionMiembro> (<Id> | <ClasesPredefinidas>) <ParentesisIzq> ( IngresarParametros()) <ParentesisDer>
 }
 // Funciones
 void Encabezado():
@@ -242,7 +277,7 @@ void Encabezado():
 void IngresarParametros():
 {}
 {
-	<Id> FuncionOArreglo() (<Coma> <Id> FuncionOArreglo())*
+	<Id> (FuncionOArreglo2())? (<Coma> <Id> (FuncionOArreglo2())?)*
 }
 void Parametros():
 {}
@@ -269,7 +304,7 @@ void Sentencia():
 	| Condicional() | SalidaEnPantalla() | DeclaracionArreglo() 
 	| SentenciasId() | VariableNoLocal() | InstanciaObjeto() 
 	| InicializacionArreglo() | DeclaracionTryCatch() | ExpresionLetIn() 
-	| ReferenciaNamespace()| RenombreDeTipo() | Lectura() ) <FinDeLinea> | ComentarioMultilinea())
+	| ReferenciaNamespace()| RenombreDeTipo() | Lectura() ) <FinDeLinea> /*| ComentarioMultilinea()*/)
 }
 
 void Metodo():
@@ -297,16 +332,16 @@ void FuncionMain():
 void InvocacionFuncion():
 {}
 {
-	<Parentesis> IngresarParametros() <Parentesis>
+	<ParentesisIzq> IngresarParametros() <ParentesisDer>
 }
 
 //Cadenas//
-void CadenaString():
+/*void CadenaString():
 {}
 {
 	<Comillas> ( <Id> )*  <Comillas>
 }
-
+*/
 //Expresiones// 
 void ExpresionReturn():
 {}
@@ -323,9 +358,11 @@ void ExpresionGeneral():
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
 	| CadenaString() ParteDerExpString() | ObtenerTamanoDeTipo())
 	*/
-	(<Parentesis> ExpresionGeneral() <Parentesis> |<ValorBooleano> ParteDerExpBooleana()
+	(<ParentesisIzq> ExpresionGeneral() <ParentesisDer> ( ParteDerExpAritmeticaOString() | ParteDerComparacion
+	() | ParteDerExpBooleana() )?
+	|<ValorBooleano> ParteDerExpBooleana()
 	|ParteFuncionMatematicaExpresionGeneral() |ParteIdExpresionGeneral() |ParteNumeroExpresionGeneral()
-	|CadenaString() ParteDerExpString()|ObtenerTamanoDeTipo())
+	| <String> ParteDerExpString()|ObtenerTamanoDeTipo())
 }
 void ParteIdExpresionGeneral():
 {}
@@ -353,22 +390,23 @@ void ParteNumeroExpresionGeneral():
 void ParteFuncionMatematicaExpresionGeneral():
 {}
 {
-	<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis>  
+	<FuncionMatematica> <ParentesisIzq> ExpresionAritmetica() <ParentesisDer>  
 }
 void ExpresionGeneralSinId():
 {}
 {
-	(<Parentesis> ExpresionGeneral() <Parentesis> 
+	(<ParentesisIzq> ExpresionGeneral() <ParentesisDer> ( ParteDerExpAritmeticaOString() | ParteDerComparacion
+	() | ParteDerExpBooleana() )?
 	|<ValorBooleano> ( ParteDerExpBooleana() )?
-	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
+	|<FuncionMatematica> <ParentesisIzq> ExpresionAritmetica() <ParentesisDer> 
 	|<Number> (ParteDerExpAritmetica()|ParteDerComparacion())? 
-	| CadenaString() ( ParteDerExpString())? | ObtenerTamanoDeTipo())
+	| <String> ( ParteDerExpString())? | ObtenerTamanoDeTipo())
 }
 void ExpresionAritmetica():
 {}
 {
-	(<Parentesis> ExpresionAritmetica() <Parentesis>  
-	|<FuncionMatematica> <Parentesis> ExpresionAritmetica() <Parentesis> 
+	(<ParentesisIzq> ExpresionAritmetica() <ParentesisDer>  
+	|<FuncionMatematica> <ParentesisIzq> ExpresionAritmetica() <ParentesisDer> 
 	|(<Id>(FuncionOArreglo2()|(<OperadorAritmeticoUnario>)?)|<Number>)) (ParteDerExpAritmetica())?
 
 }
@@ -376,16 +414,16 @@ void ExpresionAritmetica():
 void ExpresionBooleana():
 {}
 {
-	(<Parentesis> ExpresionBooleana() <Parentesis> 
-	|<Id> ((FuncionOArreglo2())?(ParteDerExpBooleana()|ParteDerComparacion())? | ComprobacionDeTipoOClase())
+	(<ParentesisIzq> ExpresionBooleana() <ParentesisDer> 
+	|<Id> ((FuncionOArreglo2())(ParteDerExpBooleana()|ParteDerComparacion())? | ComprobacionDeTipoOClase()| (ParteDerExpBooleana()|ParteDerComparacion()))?
 	|<ValorBooleano> (ParteDerExpBooleana())? )
 }
 void ExpresionString():
 {}
 {
-	(<Parentesis> ExpresionString() <Parentesis> 
-	|<Id> FuncionOArreglo() (ParteDerExpString())?
-	|CadenaString() (ParteDerExpString())? )
+	(<ParentesisIzq> ExpresionString() <ParentesisDer> 
+	|<Id> (FuncionOArreglo2())? (ParteDerExpString())?
+	|<String> (ParteDerExpString())? )
 }
 void ParteDerExpAritmetica():
 {}
@@ -411,21 +449,26 @@ void ParteDerExpAritmeticaOString():
 {}
 {
 	//<OperadorAritmeticoBinario> ( <Parentesis> ( ExpresionString() | ExpresionAritmetica() ) <Parentesis> | <Id> FuncionOArreglo() [ ( ParteDerExpString() | ParteDerExpAritmetica() ) ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )
-	<OperadorAritmeticoBinario> ( <Parentesis> ExpAritmeticaOString() <Parentesis> | ExpAritmeticaOString() )
+	<OperadorAritmeticoBinario> ( <ParentesisIzq> ExpAritmeticaOString() <ParentesisDer> | ExpAritmeticaOString() )
 }
 
 // Se usa para reemplazar (ExpAritmetica|ExpString)
 void ExpAritmeticaOString():
 {}
 {
-	( <Id> FuncionOArreglo() [ ParteDerExpAritmeticaOString() ] | CadenaString() ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )  
+	( <Id> ( FuncionOArreglo2() [ ParteDerExpAritmeticaOString() ] | ParteDerExpAritmeticaOString())?  | <String> ( ParteDerExpString() )? | <Number> [  ParteDerExpAritmetica() ] )  
 }
 
-void FuncionOArreglo():
+void FuncionOArreglo2():
+{}
+{
+	(AccesoAElementoArreglo() | InvocacionFuncion())
+}
+/*void FuncionOArreglo():
 {}
 {
 	(AccesoAElementoArreglo() | InvocacionFuncion())?
-}
+}*/
 
 void SentenciaAsignacion():
 {}
@@ -448,30 +491,30 @@ void Ciclo():
 void CicloFor():
 {}
 {
-	<For> RangoNumerico() <Rango> (Sentencia())+  <FinDeLinea>  
+	<For> RangoNumerico() <Rango> (Sentencia())+   
 }
 
 void RangoNumerico():
 {}
 {
-	<Corchete> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Corchete>
+	<CorcheteIzq> ExpresionAritmetica() <Rango> ExpresionAritmetica() <CorcheteDer>
 }
 void CicloForeach():
 {}
 {
-	<Foreach> <TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ <FinDeLinea>
+	<Foreach> <TipoDeDato> <Id> <Of> <Id> <Rango> (Sentencia())+ 
 }
 
 void CicloWhile():
 {}
 {
-	<While> ExpresionBooleana() <Rango> (Sentencia())+ <FinDeLinea>
+	<While> ExpresionBooleana() <Rango> (Sentencia())+ 
 }
 
 void CicloDoWhile():
 {}
 {
-	<Do> <Rango> (Sentencia())+ <FinDeLinea> <While> <Llaves> ExpresionBooleana() <Llaves> 
+	<Do> <Rango> (Sentencia())+ <FinDeLinea> <While> <LlaveIzq> ExpresionBooleana() <LlaveDer> 
 }
 
 //Condicionales//
@@ -490,19 +533,19 @@ void CondicionIf():
 void CondicionCase():
 {}
 {
-	<Switch> <Id> <Rango>  (CasoNormal())+ (CasoDefault())? <FinDeLinea>
+	<Switch> <Id> <Rango>  <Case> (CasoNormal() <Case>)+ ( CasoDefault())? 
 }
 
 void CasoNormal():
 {}
 {
-	<Case> <Id> <Rango> (Sentencia())+ <Break>
+	(<Id> | <Number> |<String> | <ValorBooleano> )<Rango> (Sentencia())* <Break>
 }
 
 void CasoDefault():
 {}
 {
-	<CasoDefault> <Rango> (Sentencia())+ <Break> 
+	 <CasoDefault> <Rango> (Sentencia())* <Break> 
 }
 
 void SalidaEnPantalla():
@@ -534,26 +577,26 @@ void SentenciaTry():
 void SentenciaCatch():
 {}
 {
-	<DeclaracionCatch> <Rango> (Sentencia())* <FinDeLinea>
+	<DeclaracionCatch> <Rango> (Sentencia())* 
 }
 
 //Arreglos
 void DeclaracionArreglo():
 {}
 {
-	SentenciaCorchetes() <Asignacion> <TipoDeDato> <Id> <FinDeLinea>
+	SentenciaCorchetes() <Asignacion> <TipoDeDato> <Id> 
 }
 
 void SentenciaCorchetes():
 {}
 {
-	<Corchete> <Corchete> (<Coma> <Corchete> <Corchete>)*
+	<CorcheteIzq> <CorcheteDer> ( <CorcheteIzq> <CorcheteDer>)*
 }
 
 void AccesoAElementoArreglo():
 {}
 {
-	<Corchete> ExpresionAritmetica() <Corchete> (<Coma> <Corchete> ExpresionAritmetica() <Corchete>)*
+	<CorcheteIzq> ExpresionAritmetica() <CorcheteDer> <CorcheteIzq> ExpresionAritmetica() <CorcheteDer>
 }
 
 void InicializacionArreglo():
@@ -566,7 +609,7 @@ void InicializacionArreglo():
 void Arreglo():
 {}
 {
-	<Llaves> Vector() (<Rango> Vector())* <Llaves>
+	<LlaveIzq> Vector() (<Rango> Vector())* <LlaveDer>
 }
 
 void Vector():
@@ -578,7 +621,7 @@ void Vector():
 void ElementosDeArreglo():
 {}
 {
-	(<Id> | Arreglo() | <Number> | CadenaString())
+	(<Id> | Arreglo() | <Number> | <String>)
 }
 
 //Programacion Funcional
@@ -591,7 +634,7 @@ void ExpresionFuncional():
 void CuerpoExpresionFuncional():
 {}
 {
-	( Lista() | <Id> ( <Llaves> (<Id> ( <Coma> <Id>)* )?<Llaves>)? (ParteDerExpFun())? | ( <FuncionesPredefinidasFuncionales> <Llaves> ExpresionFuncional() <Llaves> (ParteDerExpFun())? | ForeachFuncional() ))
+	( Lista() | <Id> ( <LlaveIzq> (<Id> ( <Coma> <Id>)* )?<LlaveDer>)? (ParteDerExpFun())? | ( <FuncionesPredefinidasFuncionales> <LlaveDer> ExpresionFuncional() <LlaveIzq> (ParteDerExpFun())? | ForeachFuncional() ))
 }
 
 void ParteDerExpFun():
@@ -603,13 +646,13 @@ void ParteDerExpFun():
 void ForeachFuncional():
 {}
 {
-	<Foreach> <Llaves> <Id> <In> CuerpoExpresionFuncional() <Llaves>
+	<Foreach> <LlaveIzq> <Id> <In> CuerpoExpresionFuncional() <LlaveDer>
 }
 
 void Lista():
 {}
 {
-	<Corchete> ExpresionAritmetica() <Rango> ExpresionAritmetica() <Corchete>
+	<CorcheteIzq> ExpresionAritmetica() <Rango> ExpresionAritmetica() <CorcheteDer>
 }
 
 //Expresion let in
@@ -631,7 +674,7 @@ void DefinicionLetIn():
 void Enumeracion():
 {}
 {
-	<DeclaracionEnumeracion> <Id> <Rango> <Id> ( <Coma> <Id> )+ <FinDeLinea>
+	<DeclaracionEnumeracion> <Id> <Rango> (<Id>|<String>) ( <Coma> (<Id>|<String> ))+ <FinDeLinea>
 }
 
 void AccesoEnumeracion():
@@ -642,24 +685,25 @@ void AccesoEnumeracion():
 
 //Comentarios
 
-void ComentarioMultilinea():
+/*void ComentarioMultilinea():
 {}
 {
 	<Comentario> (<Id>)+<Comentario>
 }
-
+*/
 //Namespace
 
 void SentenciaNamespace():
 {}
 {
-	<EspacioDeNombre> <Id> <Rango> ( Sentencia() )+ <FinDeLinea>
+	<EspacioDeNombre> <Id> <Rango> ( Clase() | Funcion() | Metodo() | DeclaracionEstructura() 
+	|ExpresionFuncional())+ <FinDeLinea>
 }
 
 void ReferenciaNamespace():
 {}
 {
-	<EspacioDeNombre> <Rango> <Rango> <Id> ( <Parentesis> <Parentesis> | <Rango> (Sentencia())+ ) <FinDeLinea>
+	<EspacioDeNombre> <Rango> <Rango> <Id> ( <ParentesisIzq> <ParentesisDer> | <Rango> (Sentencia())+ )
 }
 
 void SentenciaUsing ():
@@ -672,7 +716,7 @@ void SentenciaUsing ():
 void ImportarDLL():
 {}
 {
-	<Dllimport> <Llaves> <Id> <Llaves> <FinDeLinea>
+	<Dllimport> <LlaveIzq> <Id> <LlaveDer> <FinDeLinea>
 }
 
 //Otras
@@ -709,7 +753,7 @@ void Lectura():
 void ConversionReinterpretarODecVar():	
 {}
 {
-	<TipoDeDato> ( <Id> (<Asignacion> <OperadorDeConversion> <Parentesis> <Id> <Parentesis> )? | <ModificadorDeTipo> <Id> )
+	<TipoDeDato> ( <Id> (<Asignacion> <OperadorDeConversion> <ParentesisIzq> <Id> <ParentesisDer> )? | <ModificadorDeTipo> <Id> )
 }
 
 void SentenciasId():
@@ -718,11 +762,6 @@ void SentenciasId():
 	<Id> (  Conversion() | <OperadorAritmeticoUnario> (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? | ( FuncionOArreglo2() | AccesoEnumeracion() )? (ParteDerExpBooleana() | ParteDerExpAritmeticaOString() | ParteDerComparacion() )? <Asignacion> <Id> )
 }
 
-void FuncionOArreglo2():
-{}
-{
-	(AccesoAElementoArreglo() | InvocacionFuncion())
-}
 
 
 // F I N
